@@ -5,8 +5,7 @@
 * site.
 *
 * @author Kjartan Mannes
-* @drupal_user natrak@natrak.net
-* @drupal_package Notification module
+* @package Notification module
 */
 
 // $Id$
