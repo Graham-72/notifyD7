@@ -30,7 +30,7 @@ function notify_send() {
   }
 
   if (count($output[nodes])) {
-    $body[nodes] .= t("Recent content") ."\n". str_repeat("-", strlen(t("Recent nodes"))) ."\n\n";
+    $body[nodes] .= t("Recent content") ."\n". str_repeat("-", strlen(t("Recent content"))) ."\n\n";
     $body[nodes] .= wordwrap($output[nodes], 72);
     $body[nodes] .= "\n";
   }
