@@ -76,12 +76,12 @@ function notify_send() {
         if ($notify->moderate) {
           $body .= strtr(t("%status %type by %author: %title"), array("%status" => "queued", "%type" => $node->type, "%title" => $node->title, "%author" => ($node->name ? $node->name : variable_get(anonymous, "Anonymous")))) ."\n";
           $body .= notify_content($node, $notify);
-          $body .= "  [ ". url("queue/view/$node->nid") ." ]\n\n";
+          $body .= "  [ ". url("queue/view/$node->nid", NULL, NULL, TRUE) ." ]\n\n";
         }
         elseif (!$notify->moderate && $node->nid) {
           $body .= strtr(t("%status %type by %author: %title"), array("%status" => "published", "%type" => $node->type, "%title" => $node->title, "%author" => ($node->name ? $node->name : variable_get(anonymous, "Anonymous")))) ."\n";
           $body .= notify_content($node, $notify);
-          $body .= "  [ ". url("node/view/$node->nid") ." ]\n\n";
+          $body .= "  [ ". url("node/view/$node->nid", NULL, NULL, TRUE) ." ]\n\n";
         }
       }
     }
@@ -100,7 +100,7 @@ function notify_send() {
         }
         foreach ($comment as $c) {
           $body .= "  ". strtr(t("%title by %author"), array("%title" => $c->subject, "%author" => ($c->name ? $c->name : variable_get(anonymous, "Anonymous")))) ."\n"
-                .  "    ". url("node/view/$nid/$c->cid#$c->cid") ."\n\n";
+                .  "    ". url("node/view/$nid/$c->cid", NULL, "comment-$c->cid", TRUE) ."\n\n";
         }
       }
     }

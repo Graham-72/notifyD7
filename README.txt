@@ -44,5 +44,6 @@ Wish list
 This is in no particular order.
 
 - Filters on what to notify about.
-- Options to get full text in mail.
+- Options to get full text in mail (040917AX: works for nodes, but not yet for comments).
 - Some way of detecting mail bounces.
+- 040917AX: Easier customization of mail content and layout (eg. adding links for authors, formatting subject and body, adding dates, etc). I think of a template file that gets filled w/ variables from notify.module.
