@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<package version="1.0">
+  <type>module</type>
+  <name>notify</name>
+  <summary>This is a simple notification module. It provides e-mail notifications to members about updates and changes to the Drupal web site.</summary>
+  <maintainers>
+    <maintainer>Natrak</maintainer>
+  </maintainers>
+  <releases>
+    <release>
+      <version>1.0</version>
+      <state>stable</state>
+      <date>2002-05-26</date>
+      <notes>notify.module
+- fixed to work with latest CVS changes.
+- changed links.
+- XHTML-ization.</notes>
+    </release>
+  </releases>
+</package>
