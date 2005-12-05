@@ -20,7 +20,7 @@ function notify_settings() {
 
 function notify_cron() {
   if (time() - variable_get('notify_send_last', 0) > variable_get('notify_send', 86400)) {
-    include_once 'modules/notify/notify.inc';
+    include_once drupal_get_path('module', 'notify') . '/notify.inc';
     _notify_send();
     variable_set('notify_send_last', time());
     cache_clear_all('variables');

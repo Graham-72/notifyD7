@@ -94,9 +94,11 @@ function _notify_send() {
   global $base_url;
   $period = variable_get('notify_send_last', time() - variable_get('notify_send', 86400));
 
+  _notify_switch_user(); // Store current user
   // Fetch users with notify enabled
   $uresult = db_query("SELECT u.uid, u.name, u.mail, n.status, n.node, n.teasers, n.comment FROM {notify} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND u.status = 1 ". (($notify_attempts = variable_get('notify_attempts', 5)) ? ' AND n.attempts <= %d' : ''), $notify_attempts);
   while ($user = db_fetch_object($uresult)) {
+    _notify_switch_user($user->uid);
     // Fetch all new nodes
     $nresult = db_query(db_rewrite_sql('SELECT n.nid, n.body, n.type, n.title, n.promote, n.moderate, n.teaser, n.created, n.changed, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 AND n.created > %d ORDER BY n.created'), $period);
     $nodes = array();
@@ -165,6 +167,7 @@ function _notify_send() {
       }
     }
   }
+  _notify_switch_user(); // Restore user
 }
 
 function entities_to_utf8($text) {
@@ -213,5 +216,35 @@ function _notify_mail_urls($url = 0) {
     return count($urls);
   }
   return $urls;
+}
+
+/**
+ * Switch from original user to mail submision user and back.
+ *
+ * NOTE: Copied from mailhandler
+ *
+ * Note: You first need to run _notify_switch_user without
+ * argument to store the current user. Call _notify_switch_user
+ * without argument to set the user back to the original user.
+ *
+ * @param $uid The user ID to switch to
+ *
+ */
+function _notify_switch_user($uid = NULL) {
+  global $user;
+  static $orig_user = array();
+
+  if (isset($uid)) {
+    $user = user_load(array('uid' => $uid));
+  }
+  // retrieve the initial user, can be called multiple times
+  else if (count($orig_user)) {
+    $user = array_shift($orig_user);
+    array_unshift($orig_user, $user);
+  }
+  // store the initial user
+  else {
+    $orig_user[] = $user;
+  }
 }
 ?>
