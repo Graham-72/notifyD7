@@ -45,7 +45,7 @@ function notify_menu($may_cache) {
 }
 
 function notify_page() {
-  include_once 'modules/notify/notify.inc';
+  include_once drupal_get_path('module', 'notify') . '/notify.inc';
 
   $op = $_POST['op'];
   $edit = $_POST['edit'];
@@ -54,7 +54,7 @@ function notify_page() {
 }
 
 function notify_admin() {
-  include_once 'modules/notify/notify.inc';
+  include_once drupal_get_path('module', 'notify') . '/notify.inc';
 
   $op = $_POST['op'];
   $edit = $_POST['edit'];
@@ -63,4 +63,3 @@ function notify_admin() {
 
   print theme('page', form($output));
 }
-?>
