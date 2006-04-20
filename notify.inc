@@ -86,7 +86,7 @@ function _notify_content($node, $notify) {
       }
   }
   $txt = strip_tags($txt);
-  $txt = entities_to_utf8($txt);
+  $txt = notify_entities_to_utf8($txt);
   return wordwrap($txt, 72);
 }
 
@@ -123,7 +123,7 @@ function _notify_send() {
         if ($user->moderate) {
           $body .= strtr(t('%status %type by %author: %title'), array('%status' => t('queued'), '%type' => node_invoke($node, 'node_name'), '%title' => $node->title, '%author' => ($node->name ? $node->name : variable_get('anonymous', 'Anonymous')))) ."\n";
           $body .= _notify_content($node, $user);
-          $body .= '  [ '. url("queue/$node->nid", NULL, NULL, TRUE) ." ]\n\n";
+          $body .= '  [ '. url("node/$node->nid", NULL, NULL, TRUE) ." ]\n\n";
         }
         elseif (!$user->moderate && $node->nid) {
           $body .= strtr(t('%status %type by %author: %title'), array('%status' => t('published'), '%type' => node_invoke($node, 'node_name'), '%title' => $node->title, '%author' => ($node->name ? $node->name : variable_get('anonymous', 'Anonymous')))) ."\n";
@@ -136,6 +136,7 @@ function _notify_send() {
     // New comments
     if ($user->comment && count($comments)) {
       $body .= t('Recent comments') ."\n". str_repeat('-', 78) ."\n\n";
+      $nid_old = 0;
       foreach ($comments as $nid => $comment) {
         if ($nid != $nid_old) {
           if (strlen($nodes[$nid]->title) < 2) {
@@ -147,7 +148,7 @@ function _notify_send() {
         }
         foreach ($comment as $c) {
           $body .= '  '. strtr(t('%title by %author'), array('%title' => $c->subject, '%author' => ($c->name ? $c->name : variable_get(anonymous, 'Anonymous')))) ."\n"
-                .  '    '. url("node/$nid/$c->cid#$c->cid", NULL, NULL, TRUE) ."\n\n";
+                .  '    '. url("node/$nid/$c->cid", NULL, 'comment-'.$c->cid, TRUE) ."\n\n";
         }
       }
     }
@@ -170,22 +171,22 @@ function _notify_send() {
   _notify_switch_user(); // Restore user
 }
 
-function entities_to_utf8($text) {
+function notify_entities_to_utf8($text) {
   static $table;
   // We store named entities in a table for quick processing.  
   if (!isset($table)) {
     // Get all named HTML entities.
-    $table = array_flip(get_html_translation_table(HTML_ENTITIES, $special));
+    $table = array_flip(get_html_translation_table(HTML_ENTITIES));
     // PHP gives us Windows-1252/ISO-8859-1 data, we need UTF-8.
     $table = array_map('utf8_encode', $table);
   }
   $text = strtr($text, $table);
 
   // Any remaining entities are numerical. Use a regexp to replace them.
-  return preg_replace('/&#(x?)([A-Za-z0-9]+);/e', '_entity_to_utf8("$1", "$2")', $text);
+  return preg_replace('/&#(x?)([A-Za-z0-9]+);/e', '_notify_entity_to_utf8("$1", "$2")', $text);
 }
 
-function _entity_to_utf8($hex, $codepoint) {
+function _notify_entity_to_utf8($hex, $codepoint) {
   if ($hex != '') {
     $codepoint = base_convert($codepoint, 16, 10);
   }
@@ -247,4 +248,3 @@ function _notify_switch_user($uid = NULL) {
     $orig_user[] = $user;
   }
 }
-?>
