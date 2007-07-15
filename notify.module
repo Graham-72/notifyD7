@@ -95,13 +95,15 @@ function notify_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => "user/$user->uid/notify",
-      'title' => t('My notification settings'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('notify_user_settings_form', $user->uid),
-      'access' => user_access('access notify'),
-      'type' => MENU_LOCAL_TASK,
-    );
+    if ($user->uid) { // Do not show this on user/0/notify (see #157850!!)
+      $items[] = array('path' => "user/$user->uid/notify",
+        'title' => t('My notification settings'),
+        'callback' => 'drupal_get_form',
+        'callback arguments' => array('notify_user_settings_form', $user->uid),
+        'access' => user_access('access notify'),
+        'type' => MENU_LOCAL_TASK,
+      );
+    }
     $items[] = array('path' => 'admin/user/user/notify',
       'title' => t('Notifications'),
       'callback' => 'drupal_get_form',
