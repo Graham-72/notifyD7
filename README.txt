@@ -23,10 +23,10 @@ INSTALLATION
 2. Enable the notify module on the Administer >> Site building >> Modules page.
    The database tables will be created automagically for you at this point.
 
-3. Modify permissions on the Administer >> Users >> Access control page.
+3. Modify permissions on the Administer >> User management >> Access control page.
 
-4. Go to Administer >> Content >> Notification settings and modify the settings
-   to your liking.
+4. Go to Administer >> Site configuration >> Notification settings and modify the
+   settings to your liking.
    Note: e-mail updates can only happen as frequently as the cron is setup to.
    Check your cron settings.
 

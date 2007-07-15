@@ -58,3 +58,11 @@ function notify_update_1() {
   $ret[] = update_sql("UPDATE {system} SET weight = $weight WHERE name = 'notify'");
   return $ret;
 }
+
+/**
+ * Clear {cache_menu} after the admin menu changes.
+ */
+function notify_update_2() {
+  cache_clear_all(NULL, 'cache_menu');
+  drupal_set_message(t('The settings page for the notify.module is now to be found in Administer > Site configuration > Notification settings.'));
+}

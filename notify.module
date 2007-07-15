@@ -12,7 +12,7 @@ function notify_help($section) {
       $output .= t('<p>You can</p><ul><li>set up your site to run tasks automatically at required intervals. For more information, see <a href="@admin-help-system">cron</a>.</li><li>administer notify <a href="@admin-settings-notify">administer &gt;&gt; settings &gt;&gt; notify</a>.</li></ul>', array('@admin-help-system' => url('admin/help/system'), '@admin-settings-notify' => url('admin/settings/notify')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@notify">Notify page</a>.', array('@notify' => 'http://www.drupal.org/handbook/modules/notify/')) .'</p>';
       return $output;
-    case 'admin/content/notify':
+    case 'admin/settings/notify':
       $output .= '<fieldset><legend>'. t('Warning!') .'</legend><p>'. t('Nodes or comments which include <strong>PHP code</strong> might in some circumstances <strong>break your web site</strong>. They might cause <em>notify</em> to run in a loop or completely malfunction. This is not a bug: if you are adding some PHP code into your content, <em>you are supposed to know what you are doing</em>. See the <a href="@notify">handbook page for notify.module</a>.', array('@notify' => 'http://www.drupal.org/handbook/modules/notify/')) .'</p></fieldset>';
       return $output;
   }
@@ -109,7 +109,7 @@ function notify_menu($may_cache) {
       'access' => user_access('administer notify'),
       'type' => MENU_LOCAL_TASK,
     );
-    $items[] = array('path' => 'admin/content/notify',
+    $items[] = array('path' => 'admin/settings/notify',
       'title' => t('Notification settings'),
       'description' => t('Adjust settings for new content notifications sent by e-mail.'),
       'callback' => 'drupal_get_form',
