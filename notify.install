@@ -47,6 +47,16 @@ function notify_install() {
 }
 
 /**
+ * Implementation of hook_uninstall()
+ */
+function notify_uninstall() {
+  db_query("DROP TABLE {notify}");
+  variable_del('notify_send');
+  variable_del('notify_attempts');
+  variable_del('notify_send_last');
+}
+
+/**
  * Alter weight of notify to run after scheduler.
  */
 function notify_update_1() {
