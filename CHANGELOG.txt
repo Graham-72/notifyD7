@@ -1,0 +1,6 @@
+$Id$
+
+
+#145147 - July 2007.
+The settings page for the notify.module is now to be found in Administer > Site configuration > Notification settings.
+

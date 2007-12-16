@@ -74,7 +74,6 @@ function notify_update_1() {
  */
 function notify_update_2() {
   $ret = array();
-  cache_clear_all(NULL, 'cache_menu');
   drupal_set_message(t('The settings page for the notify.module is now to be found in Administer > Site configuration > Notification settings.'));
   return $ret;
 }
