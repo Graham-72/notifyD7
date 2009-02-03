@@ -47,16 +47,6 @@ function notify_install() {
 }
 
 /**
- * Implementation of hook_uninstall()
- */
-function notify_uninstall() {
-  db_query("DROP TABLE {notify}");
-  variable_del('notify_send');
-  variable_del('notify_attempts');
-  variable_del('notify_send_last');
-}
-
-/**
  * Alter weight of notify to run after scheduler.
  */
 function notify_update_1() {
@@ -66,14 +56,5 @@ function notify_update_1() {
   // update_sql() doesn't take other parameters, but this is safe, since $weight
   // is guaranteed to be an integer.
   $ret[] = update_sql("UPDATE {system} SET weight = $weight WHERE name = 'notify'");
-  return $ret;
-}
-
-/**
- * Clear {cache_menu} after the admin menu changes.
- */
-function notify_update_2() {
-  $ret = array();
-  drupal_set_message(t('The settings page for the notify.module is now to be found in Administer > Site configuration > Notification settings.'));
   return $ret;
 }
