@@ -153,7 +153,7 @@ function notify_menu($may_cache) {
  */
 function notify_user_settings_form($uid = 0) {
   global $user;
-  if ($user->uid != $uid && $user->uid != 1) {
+  if ($user->uid != $uid && !user_access('administer notify')) {
     drupal_access_denied();
     return;
   }
