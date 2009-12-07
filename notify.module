@@ -72,7 +72,7 @@ function notify_cron() {
   $send_interval = variable_get('notify_send', 86400);
   $send_hour = variable_get('notify_send_hour', date('G', variable_get('notify_send_last', 0)));
   if ( (time() - $send_last > $send_interval) 
-    && (date('G', time()) > $send_hour) 
+    && (date('G', time()) >= $send_hour || $send_interval < 86400) 
     && ($send_interval != -1) //special case of settings to send 'never' 
       ) {
     _notify_send();
