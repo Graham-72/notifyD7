@@ -1,5 +1,4 @@
 <?php
-// $Id$
 function _notify_page($op, $edit) {
   global $user;
   if (user_access('access notify') && $user) {
