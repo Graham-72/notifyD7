@@ -1,6 +1,5 @@
 # translation of notify-inc.po to Hungarian
 # LANGUAGE translation of Drupal (notify.inc)
-# $Id$
 # Copyright YEAR NAME <EMAIL@ADDRESS>.
 # Fehér János <feher.janos@mindworks.hu>, 2005.
 #
