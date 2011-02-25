@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function notify_system($field) {
   $system["description"] = t("Enables notifications by email");
