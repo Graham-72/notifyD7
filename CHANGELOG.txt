@@ -1,3 +1,6 @@
+2013-08-22:  Gisle Hannemyr <gisle@hannemyr.no>
+- #935458 by parasolx: Fixes bug introduced by inital patch for this issue.
+
 2011-02-25: The Great Git Migration <tggm@no-reply.drupal.org>
 - Removing translation directories
 - Stripping CVS keywords.
