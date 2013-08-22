@@ -1,0 +1,67 @@
+2011-02-25: The Great Git Migration <tggm@no-reply.drupal.org>
+- Removing translation directories
+- Stripping CVS keywords.
+
+2010-10-08: Matt Chapman <Matt@NinjitsuWeb.com>
+- #935458 by mradcliffe: Prevents sending node when only comments are new.
+
+2010-08-05: Matt Chapman <Matt@NinjitsuWeb.com>
+- Release 6.x-1.2
+
+2010-08-05: Matt Chapman <Matt@NinjitsuWeb.com>
+- #869054 by izmeez, matt2000: Fixed Notify updated content emails not sent on timed cron.
+
+2010-07-14: Matt Chapman <Matt@NinjitsuWeb.com>
+- #853364: need to specificy alias for db_rewrite_sql
+
+2010-07-10: Matt Chapman <Matt@NinjitsuWeb.com>
+- Add URL to Notifications module in Alternatives
+- #368175 by jromine and matt2000: Race condition in notification
+- #614946: more work
+- #614946: bug fix
+
+2010-07-09: Matt Chapman <Matt@NinjitsuWeb.com>
+- #822868: misc bug fixes
+- Delete variables during uninstall.
+- Whitespace clean-up.
+- Code style clean-up; removed outdated field description.
+
+2010-05-31: Matt Chapman <Matt@NinjitsuWeb.com>
+- #614946 - Support notification of unpublished comments
+- avoid db_rewrite_sql alias collision, and move node & comment loading outside the user-specific loop, since we use node_access checks anyway
+- minor fixes and make updated nodes optional
+- #589314 by matt2000 - fix duplicate wrapping
+
+2009-12-07: Matt Chapman <Matt@NinjitsuWeb.com>
+- merge from HEAD
+
+2008-12-17: Matt Chapman <Matt@NinjitsuWeb.com>
+- #314689 by fudge714, and other small fixes
+
+2008-11-08: Matt Chapman <Matt@NinjitsuWeb.com>
+- Added notifications opt-in to user registration form
+
+2008-10-02: Matt Chapman <Matt@NinjitsuWeb.com>
+- #316234 by rohnjeynolds: fixed
+
+2008-09-04: Matt Chapman <Matt@NinjitsuWeb.com>
+- #190585 - by by Standart, Comment 13
+
+2008-09-03: Matt Chapman <Matt@NinjitsuWeb.com>
+- #190585 - Applied patch by Standart
+
+2008-08-30: Matt Chapman <Matt@NinjitsuWeb.com>
+- #148454 by mygumbo
+- #182714 by derieppe
+- #300280 by Matt B - show form even when warned
+
+2008-08-27: Matt Chapman <Matt@NinjitsuWeb.com>
+- #300280 by Matt B: Fixed notify_user_settings_form
+- #300294 by Matt B : New .install file for D6
+
+2008-08-25: Matt Chapman <Matt@NinjitsuWeb.com>
+- #266501 by Alatalo - Added Finnish translation
+- #190585: Fix per Comment 5.
+
+2008-08-25: Matt Chapman <Matt@NinjitsuWeb.com>
+- Initial Drupal 6 version, based on #190585
