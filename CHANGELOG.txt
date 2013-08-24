@@ -1,3 +1,6 @@
+2013-08-24:  Gisle Hannemyr <gisle@hannemyr.no>
+- #611456 by BenKewell: Added calls to t() for untranslated strings.
+
 2013-08-22:  Gisle Hannemyr <gisle@hannemyr.no>
 - #935458 by parasolx: Fixes bug introduced by inital patch for this issue.
 
