@@ -1,3 +1,6 @@
+2013-08-25:  Gisle Hannemyr <gisle@hannemyr.no>
+- by gisle: Restored "\n" as EOL in mail messages.
+
 2013-08-24:  Gisle Hannemyr <gisle@hannemyr.no>
 - #611456 by BenKewell: Added calls to t() for untranslated strings.
 
