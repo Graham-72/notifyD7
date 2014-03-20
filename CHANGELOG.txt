@@ -1,3 +1,6 @@
+2014-03-20:  Gisle Hannemyr <gisle@hannemyr.no>
+- #2221675 by glass.dimly: Added Notify Views Integration submodule
+
 2013-08-25:  Gisle Hannemyr <gisle@hannemyr.no>
 - by gisle: Restored "\n" as EOL in mail messages.
 

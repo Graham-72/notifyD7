@@ -62,6 +62,8 @@ Kjartan Mannes <kjartan@drop.org> is the original author.
 
 Rob Barreca <rob@electronicinsight.com> was a previous maintainer.
 
+glass.dimly http://glassdimly.com/ contributed Notify Views integration
+
 Matt Chapman <matt@ninjitsuweb.com> is the current maintainer.
 
 ------------------------
@@ -71,3 +73,24 @@ RELATED PROJECTS & ALTERNATIVES
 http://drupal.org/project/notify_by_views
 http://drupal.org/project/subscriptions
 http://drupal.org/project/notifications
+
+========================================================================
+
+------------------------------------------
+NOTIFY VIEWS INTEGRATION 6.x MODULE README
+------------------------------------------
+
+The Notify Views Integration submodule is small module that simply
+tells the Views module about the Notify database so you can create
+listings of users by notify subscription status for export or
+administration.
+
+There is no configuration page for this submodule. Too see it in
+create a view of type "User" and you'll see that under "Fields" and
+"Filters" there are additional options under the category "Notify."
+
+A typical use case is to to make a listing of node subscribers with
+names and email addresses and then exported that list using the Views
+Data Export module (https://drupal.org/project/views_data_export).
+
+========================================================================
