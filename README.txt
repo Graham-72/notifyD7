@@ -15,6 +15,7 @@ CONTENTS OF THIS FILE
   - User's settings
 * Troubleshooting
 * Testing
+* Related projects & alternatives
 * Maintainers
 
 
@@ -45,6 +46,7 @@ REQUIREMENTS
 This module requires a supported version of Drupal and cron to be
 running.
 
+
 RECOMMENDED MODULES
 -------------------
 
@@ -54,6 +56,7 @@ RECOMMENDED MODULES
 * Advanced help (https://www.drupal.org/project/advanced_help)
   When this module is enabled the administrator will have access to
   more extensive help.
+
 
 INSTALLATION
 ------------
@@ -300,10 +303,10 @@ non-administrators.
 TROUBLESHOOTING
 ---------------
 
-* If Notify does not send out <em>any</em> notification emails, first
-  check that Drupal can send email otherwise (e.g. request a password
-  reset email).  If this does not work, the problem is with your
-  site's email configuration, not Notify.
+* If Notify does not send out any notification emails, first check
+  that Drupal can send email otherwise (e.g. request a password reset
+  email).  If this does not work, the problem is with your site's
+  email configuration, not Notify.
 
 * If inbound links in the notification e-mail is rendered as
   http://default, you may need to set the $base_url in your
@@ -324,7 +327,6 @@ TROUBLESHOOTING
   issue for further details: https://www.drupal.org/node/146521. If
   this happens, you may try to disable the PHP Filter module.
 
-
 If the above does not help you, to file bug reports, use the issue
 queue linked to from the Notify project page.
 
@@ -335,6 +337,15 @@ TESTING
 The file notify.test contains a test suite for Notify that make use of
 the core Testing module.  See comments inside the file for details
 about the individual tests.
+
+
+RELATED PROJECTS & ALTERNATIVES
+-------------------------------
+
+See the pages:
+- https://drupal.org/node/645108
+- http://groups.drupal.org/node/15928
+for overviews of modules providing similar functionality.
 
 
 MAINTAINERS
@@ -352,3 +363,5 @@ Ward Poelmans <wpoely86@gmail.com>,
 Ishmael Sanchez (http://ishmaelsanchez.com), and
 Ajit Shinde (https://www.facebook.com/shinde.ajit)
 contributed to the Drupal 7 port.
+Vincent Rommelaars <vincent@hostplek.nl> contributed to the Drupal 8
+port.
