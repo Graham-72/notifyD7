@@ -313,6 +313,7 @@ function notify_admin_queue($form, &$form_state) {
       $sent_msg .= ', ' . t('no failures');
     }
   }
+
   $mailsystem = variable_get('mail_system', NULL);
   $ms = isset($mailsystem['default-system']) ? $mailsystem['default-system'] : t('system default');
   $form['batch']['schedule'] = array(
@@ -322,7 +323,7 @@ function notify_admin_queue($form, &$form_state) {
     . $skip_msg . '.<br>'
     . $sent_msg . '.<br>'
     . $batch_msg . '.<br>'
-    . t('Default MailSystem: ') . $ms . '.'
+    . t('Default MailSystem: !mailsystem.', array('!mailsystem' => $ms)),
   );
   return $form;
 }
@@ -597,7 +598,7 @@ function theme_notify_admin_skip($variables) {
   if (!$rows) {
     $rows[] = array(array(
         'data' => t('No notifications are scheduled.'),
-        'colspan' => 5,
+        'colspan' => 6,
       ));
   }
   $output .= theme('table', array('header' => $header, 'rows' => $rows));

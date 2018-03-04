@@ -99,11 +99,12 @@ PERMISSIONS
 To set up permissions for Notify navigate to: Administration » People
 » Permissions.
 
-There are three permissions:
+There are four permissions:
 
 1. access notify: to subscribe to and receive notifications when there is new content
 2. administer notify: to administer general notify settings, default settings, and users
-3. dminister notify queue: to administer the notify queue operations and skip flags
+3. administer notify queue: to administer the notify queue operations
+4. administer notify skip flags: to administer the notify skip flags
 
 
 
@@ -236,8 +237,9 @@ the value of the last notification timestamp.  This value is only used
 to override of the operation "Override timestamp" is selected.
 
 The status panel at the bottom of the page gives the administrator a
-rough overview of the current state of the notification queue. Its
-main use is for debugging.
+rough overview of the current state of the notification queue, as well
+as the Default MailSystem. The main use of the status panel is to
+provide information useful for debugging.
 
 
 Skip flags

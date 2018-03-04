@@ -81,10 +81,7 @@ class TestNotify extends SharedTestFunctions {
   }
 
   public function setUp() {
-    debug('DEBUG INIT: Test Notify single');
-
-    // Use testing mail system.
-    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    debug('DEBUG setUp: Test Notify single');
 
     // Enable any modules required for the test. This should be an array of
     // module names.
@@ -94,6 +91,7 @@ class TestNotify extends SharedTestFunctions {
       'access notify',
       'administer notify',
       'administer notify queue',
+      'administer notify skip flags',
       'administer nodes', 
       'bypass node access', 
       'create article content',
@@ -114,6 +112,8 @@ class TestNotify extends SharedTestFunctions {
     variable_set('notify_period', -1);
     variable_set('notify_send_hour',  9);
     variable_set('notify_batchsize', 100);
+    //variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    
     $now = REQUEST_TIME;
     variable_set('notify_send_start', 0);  // We haven't started
     $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
@@ -265,9 +265,7 @@ class TestSendingHour extends SharedTestFunctions {
   }
 
   public function setUp() {
-    debug('DEBUG INIT: Test Notify sending hour');
-    // Use testing mail system.
-    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    debug('DEBUG setUp: Test Notify sending hour');
 
     // Enable any modules required for the test. This should be an array of
     // module names.
@@ -277,6 +275,7 @@ class TestSendingHour extends SharedTestFunctions {
       'access notify',
       'administer notify',
       'administer notify queue',
+      'administer notify skip flags',
       'administer nodes', 
       'bypass node access', 
       'create article content',
@@ -299,6 +298,8 @@ class TestSendingHour extends SharedTestFunctions {
     variable_set('notify_include_updates', 0);
     variable_set('notify_reg_default', 1);
     variable_set('notify_period', 172800);  // every 2 days 
+    //variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    
     $hour = date('G', REQUEST_TIME);
     if ($hour < 3) {
       return $this->assert('exception', 'Test "testRespectSendingHour" can only be run after 0300 hours.', 'Notify');
@@ -430,7 +431,7 @@ class TestNotifyVariables extends SharedTestFunctions {
   }
 
   public function setUp() {
-    debug('DEBUG INIT: Show Notify variables');
+    debug('DEBUG setUp: Show Notify variables');
     // Enable Notify.
     parent::setUp(array('notify'));
   }
@@ -466,9 +467,7 @@ class TestNotifyBatch extends SharedTestFunctions {
   }
 
   public function setUp() {
-    debug('DEBUG INIT: Show Notify batch');
-    // Use testing mail system.
-    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+    debug('DEBUG setUp: Show Notify batch');
 
     // Enable any modules required for the test. This should be an array of
     // module names.
@@ -478,6 +477,7 @@ class TestNotifyBatch extends SharedTestFunctions {
       'access notify',
       'administer notify',
       'administer notify queue',
+      'administer notify skip flags',
       'administer nodes', 
       'bypass node access', 
       'create article content',
@@ -498,6 +498,8 @@ class TestNotifyBatch extends SharedTestFunctions {
     variable_set('notify_period', 86400);
     variable_set('notify_send_hour',  9);
     variable_set('notify_batchsize', 100);
+    //variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
     $now = REQUEST_TIME;
     variable_set('notify_send_start', 0);  // We haven't started
     $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
@@ -568,9 +570,6 @@ class TestNotifyPeriods extends SharedTestFunctions {
   }
 
   public function setUp() {
-    // Use testing mail system.
-    variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
-
     // Enable any modules required for the test. This should be an array of
     // module names.
     parent::setUp(array('notify'));
@@ -579,6 +578,7 @@ class TestNotifyPeriods extends SharedTestFunctions {
       'access notify',
       'administer notify',
       'administer notify queue',
+      'administer notify skip flags',
       'administer nodes', 
       'bypass node access', 
       'create article content',
@@ -599,6 +599,8 @@ class TestNotifyPeriods extends SharedTestFunctions {
     variable_set('notify_period', 0);
     variable_set('notify_send_hour',  9);
     variable_set('notify_batchsize', 100);
+    //variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
     // $now = REQUEST_TIME; $tt = $now - 86400; 
     variable_set('notify_send_start', 0); // We haven't started
     variable_set('notify_send_last',  0); // Last reset
@@ -651,6 +653,66 @@ class TestNotifyPeriods extends SharedTestFunctions {
     $mails = $this->drupalGetMails();
     $howmany = count($mails);
     $this->assertEqual($howmany, 3, 'Three emails are sent.');
+  }
+
+}
+
+class TestNotifyMailSystem extends SharedTestFunctions {
+  protected $user;
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Test Notify mailsystem'),
+      'description' => t('Simple test of sending mail.'),
+      'group' => t('Notify'),
+    );
+  }
+
+  public function setUp() {
+    debug('DEBUG setUp: Test Notify mailsystem');
+
+    // Enable any modules required for the test. This should be an array of
+    // module names.
+    parent::setUp(array('notify'));
+    // Create and log in our admin user. Give permissions.
+    $admin = $this->drupalCreateAdminUser(array(
+      'access notify',
+      'administer notify',
+      'administer notify queue',
+      'administer notify skip flags',
+      'administer nodes', 
+      'bypass node access', 
+      'create article content',
+      ));
+    $user = $this->drupalCreateNotifyUsers(2);
+    $this->user = $user;
+    // Login admin user
+    $this->drupalLogin($admin);
+    
+  }
+
+  // Tests notification about one unpublished nodes (only notify admin).
+  // Send on first cron.
+  public function testCreateOnlyUnpublishedArticles() {
+    // Set up notify environment.
+    variable_set('notify_attempts', 5);
+    variable_set('notify_include_updates', 0);
+    variable_set('notify_reg_default', 1);
+    variable_set('notify_period', 0);
+    variable_set('notify_send_hour',  9);
+    variable_set('notify_batchsize', 100);
+    //variable_set('mail_system', array('default-system' => 'TestingMailSystem'));
+
+    $now = REQUEST_TIME;
+    variable_set('notify_send_start', 0);  // We haven't started
+    $tt = $now - 86400; variable_set('notify_send_last',  $tt); // Last was yesterday.
+    $tt = $now + 86400; variable_set('notify_cron_next',  $tt); // Next cron scheduled tomorrow.
+
+    $this->createContent(1, $this->user->name, FALSE);
+    $this->cronRun();
+    $mails = $this->drupalGetMails();
+    $howmany = count($mails);
+    $this->assertEqual($howmany, 1, 'One email are sent.');
   }
 
 }
