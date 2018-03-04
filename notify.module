@@ -11,6 +11,8 @@
  * to monitor content submissions and comment posts.
  */
 
+use Drupal\Core\Mail\MailFormatHelper;
+
 if (!defined('NOTIFY_NODE_TYPE')) {
     define('NOTIFY_NODE_TYPE', 'notify_node_type_');
 }
@@ -562,7 +564,7 @@ function _notify_content($node, $comment, $view_mode) {
                 $txt .= $content[$child][0]['#markup'];
             }
         }
-        return drupal_html_to_text($txt);
+        return MailFormatHelper::htmlToText($txt);
     }
 
     if (1 == $view_mode) {
@@ -588,7 +590,7 @@ function _notify_content($node, $comment, $view_mode) {
             $txt = $content['body'][0]['#markup'];
         }
     }
-    return drupal_html_to_text($txt);
+    return MailFormatHelper::htmlToText($txt);
 }
 
 /**
