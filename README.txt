@@ -336,9 +336,7 @@ queue linked to from the Notify project page.
 TESTING
 -------
 
-The file notify.test contains a test suite for Notify that make use of
-the core Testing module.  See comments inside the file for details
-about the individual tests.
+The test suite is removed in this release for help with debugging.
 
 
 RELATED PROJECTS & ALTERNATIVES
