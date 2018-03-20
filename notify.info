@@ -3,3 +3,4 @@ description = "Enables notifications of new content and comments by e-mail with 
 package = Mail
 core = 7.x
 configure = admin/config/people/notify
+files[] = notify.test
