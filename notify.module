@@ -946,6 +946,9 @@ function _notify_send() {
     $user = $original_user;
     drupal_save_session($old_state);
   }
+  else {
+    variable_del('notify_users');
+  }
   $rest = count(variable_get('notify_users', array()));
   // If $rest is empty, then set notify_send_last.
   if (!$rest) {
