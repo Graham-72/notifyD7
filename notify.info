@@ -1,5 +1,5 @@
 name = Notify
-description = "Enables notifications of new content and comments by e-mail with no test framework."
+description = "Enables notifications of new content and comments by e-mail."
 package = Mail
 core = 7.x
 configure = admin/config/people/notify

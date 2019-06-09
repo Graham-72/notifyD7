@@ -64,7 +64,7 @@ function notify_viewsintegration_views_data() {
 
   $data['notify']['status'] = array(
     'title' => t('Master switch status'),
-    'help' => t('Set to &#8220;1&#8221; for enabled,  &#8220;0&#8221; or blank for disabled.'),
+    'help' => t('Set to “1” for enabled,  “0” or blank for disabled.'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
@@ -79,7 +79,7 @@ function notify_viewsintegration_views_data() {
 
   $data['notify']['node'] = array(
     'title' => t('New content'),
-    'help' => t('Set to &#8220;1&#8221; for enabled,  &#8220;0&#8221; or blank for disabled.'),
+    'help' => t('Set to “1” for enabled,  “0” or blank for disabled.'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
@@ -94,7 +94,7 @@ function notify_viewsintegration_views_data() {
 
   $data['notify']['comment'] = array(
     'title' => t('New comments'),
-    'help' => t('Set to &#8220;1&#8221; for enabled,  &#8220;0&#8221; or blank for disabled.'),
+    'help' => t('Set to “1” for enabled,  “0” or blank for disabled.'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
@@ -124,7 +124,7 @@ function notify_viewsintegration_views_data() {
 
   $data['notify']['teasers'] = array(
     'title' => t('How much to notify about'),
-    'help' => t('Set to: &#8220;0&#8221; for Title only,  &#8220;1&#8221; for Title + Teaser,  &#8220;2&#8221; for Title + Body,  &#8220;3&#8221; for Title + Body + Fields.'),
+    'help' => t('Set to: “0” for Title only,  “1” for Title + Teaser,  “2” for Title + Body,  “3” for Title + Body + Fields.'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,

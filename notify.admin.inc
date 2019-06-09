@@ -63,7 +63,7 @@ function notify_admin_settings($form, &$form_state) {
   $form['notify_settings']['notify_period'] = array(
     '#type' => 'select',
     '#title' => t('Send notifications every'),
-    '#default_value' => variable_get('notify_period', array(86400)),
+    '#default_value' => variable_get('notify_period', 86400),
     '#options' => $period,
     '#description' => t('How often should new content notifications be sent? Requires cron to be running at least this often.'),
   );
@@ -202,7 +202,7 @@ function notify_admin_queue($form, &$form_state) {
     '#title' => t('Notification queue operations'),
     '#default_value' => 0,
     '#options' => array(t('Send batch now'), t('Truncate queue'), t('Override timestamp')),
-    '#description' => t('Select &#8220;Send batch now&#8220; to send next batch of e-mails queued for notifications. Select &#8220;Truncate queue&#8220; to empty queue of pending notification <em>without</em> sending e-mails. Select &#8220;Override timestamp&#8220; to override the last notification timestamp. Press &#8220;Submit&#8220; to execute.'),
+    '#description' => t('Select “Send batch now” to send next batch of e-mails queued for notifications. Select “Truncate queue” to empty queue of pending notification <em>without</em> sending e-mails. Select “Override timestamp” to override the last notification timestamp. Press “Submit” to execute.'),
   );
 
   $send_last = format_date($notify_send_last, 'custom', 'Y-m-d H:i:s');
@@ -213,7 +213,7 @@ function notify_admin_queue($form, &$form_state) {
     '#default_value' => $send_last,
     '#size' => 19,
     '#maxlength' => 19,
-    '#description' => t('To explicitly set the last notification timestamp, change the value of this field and select the &#8220;Override timestamp&#8220; option above, then press &#8220;Submit&#8220; to execute.'),
+    '#description' => t('To explicitly set the last notification timestamp, change the value of this field and select the “Override timestamp” option above, then press “Submit” to execute.'),
   ); 
 
   $form['submit'] = array(
@@ -344,13 +344,13 @@ function notify_admin_queue_submit($form, &$form_state) {
   $frform_string = format_date($frform_send_last. 'short');
   if ($process < 2) {
     if ($notify_send_last != $frform_send_last) {
-      form_set_error('notify_admin_queue', t('You must select &#8220;Override timestamp&#8221; to override the timestamp.'));
+      form_set_error('notify_admin_queue', t('You must select “Override timestamp” to override the timestamp.'));
       return;
     }
   }
   elseif ($process == 2) {
     if ($notify_send_last == $frform_send_last) {
-      form_set_error('notify_admin_queue', t('You selected &#8220;Override timestamp&#8221;, but the timestamp is not altered.'));
+      form_set_error('notify_admin_queue', t('You selected “Override timestamp”, but the timestamp is not altered.'));
       return;
     }
   }
@@ -464,7 +464,7 @@ function notify_admin_skip($form, &$form_state) {
 
   $form['#tree'] = TRUE;
   $form['info'] = array(
-    '#markup' => '<p>' . t('The following table shows all messages that are candidates for bulk notifications:' . '</p>'),
+    '#markup' => '<p>' . t('The following table shows all messages that are scheduled to be sent as notifications:' . '</p>'),
   );
 
   $skpnodes = variable_get('notify_skip_nodes', array());
@@ -530,7 +530,7 @@ function notify_admin_skip($form, &$form_state) {
   }
   else {
     $form['info2'] = array(
-      '#markup' => '<p>' . t('To flag that <em>no</em> notification about a particular message should be sent, check the checkbox in the &#8220;Skip&#8220; column. Press &#8220;Save skip flags&#8220; to save the flags.') . '</p> ',
+      '#markup' => '<p>' . t('To flag that <em>no</em> notification about a particular message should be sent, check the checkbox in the “Skip” column. Press “Save skip flags” to save the flags.') . '</p> ',
     );
   }
   $form['submit'] = array(
@@ -771,11 +771,11 @@ function notify_admin_users($form, &$form_state) {
   }
 
   $form['info2'] = array(
-    '#markup' => '<p>' . t('You may check/uncheck the checkboxes and the &#8220;How much&#8220;-selection to change the users\' subscription. Press &#8220;Save settings&#8220; to save the settings.' . '</p>'),
+    '#markup' => '<p>' . t("You may check/uncheck the checkboxes and the “How much”-selection to change the users' subscriptions. Press “Save settings” to save the settings." . '</p>'),
   );
 
   $form['bulk'] = array(
-    '#title' => t('Bulk subscribe all users'),
+    '#title' => t('Subscribe all users'),
     '#type' => 'checkbox',
     '#default_value' => FALSE,
     '#description' => t('Subscribe all non-blocked users that do not already subscribe to notifications.'),
@@ -905,6 +905,23 @@ function notify_user_settings_form($form, &$form_state, $arg) {
     '#type' => 'fieldset',
     '#title' => t('Master switch'),
   );
+  $periodsec = variable_get('notify_period', 86400);
+  if (0 == $periodsec) {
+    $cron = $periodsec = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+  }
+  $sendhour = variable_get('notify_send_hour', 9);
+  $pp = format_interval($periodsec);
+  // If $periodsec, period depends on external cron, so we can't report it.
+  if ($periodsec) {
+    $ss = '<p>' . t('Notifications are sent every !period', array('!period' => $pp));
+    if ($periodsec >= 86400) {
+      $ss .= ' ' . t("after !sendhour:00 o' clock", array('!sendhour' => $sendhour));
+    }
+    $ss .= '.</p>';
+    $form['notify_page_master']['period'] = array(
+      '#markup' => $ss,
+    );
+  }
   // If user existed before notify was enabled, these are not set in db.
   if (!isset($notify->status)) {
     $notify->status = 0;
@@ -927,7 +944,7 @@ function notify_user_settings_form($form, &$form_state, $arg) {
     '#title' => t('Notify status'),
     '#default_value' => $notify->status,
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => $output . '&nbsp;' . t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under &#8220;Detailed settings&#8221; and &#8220;Subscriptions&#8221;.'),
+    '#description' => $output . '&nbsp;' . t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under “Detailed settings” and “Subscriptions”.'),
   );
 
   $form['notify_page_detailed'] = array(
@@ -935,7 +952,7 @@ function notify_user_settings_form($form, &$form_state, $arg) {
     '#title' => t('Detailed settings'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#description' => t('These settings will only be effective if the master switch is set to &#8220;Enabled&#8221;.'),
+    '#description' => t('These settings will only be effective if the master switch is set to “Enabled”.'),
   );
   $form['notify_page_detailed']['node'] = array(
     '#type' => 'radios',
