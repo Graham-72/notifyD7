@@ -642,7 +642,7 @@ function notify_admin_defaults($form, &$form_state) {
     '#title' => t('Initial settings'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#description' => t('These are the initial settings that will apply to new users registering, and to users that are enrolled in notifications with batch subscription.'),
+    '#description' => t('These are the initial settings that will apply to new users registering, and to users that are enrolled in notifications by means of the automatic enrollment tickboxes under the “Users” tab.'),
   );
   $form['notify_defs']['node'] = array(
     '#type' => 'radios',
@@ -771,14 +771,25 @@ function notify_admin_users($form, &$form_state) {
   }
 
   $form['info2'] = array(
-    '#markup' => '<p>' . t("You may check/uncheck the checkboxes and the “How much”-selection to change the users' subscriptions. Press “Save settings” to save the settings." . '</p>'),
+    '#markup' => '<p>' . t("You may check/uncheck the checkboxes and the “How much”-selection to change the users' subscriptions. Press “Save settings” to save the settings." .
+      '</p><h3>' . t('Automatic enrollment tickboxes') . '</h3>'),
+  );
+
+  $form['import'] = array(
+    '#title' => t('Subscribe users when importing'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('notify_import', 0),
+    '#description' => t('Subscribe users that are imported by means of <strong>User Import</strong> (and similiar tools).'),
   );
 
   $form['bulk'] = array(
-    '#title' => t('Subscribe all users'),
+    '#title' => t('Subscribe all users now'),
     '#type' => 'checkbox',
     '#default_value' => FALSE,
     '#description' => t('Subscribe all non-blocked users that do not already subscribe to notifications.'),
+  );
+  $form['info3'] = array(
+    '#markup' => '<p>' . t("Press “Save settings” if you have changed setting for automatic enrollment." . '</p>'),
   );
 
   $form['submit'] = array(
@@ -793,7 +804,20 @@ function notify_admin_users($form, &$form_state) {
  */
 function notify_admin_users_submit($form, &$form_state) {
   unset($form);
+  $messages = 0;
 
+  if (isset($form_state['values']['import']) && 1 == $form_state['values']['import']) {
+    variable_set('notify_import', 1);
+    drupal_set_message(t('Will subscribe users when importing.'));
+    $messages++;
+  }
+  else {
+    if (variable_get('notify_import', 0)) {
+      variable_set('notify_import', 0);
+      drupal_set_message(t('Will no longer subscribe users when importing.'));
+      $messages++;
+    }
+  }
   if (isset($form_state['values']['bulk']) && 1 == $form_state['values']['bulk']) {
     $node = variable_get('notify_def_node', 1);
     $comment = variable_get('notify_def_comment', 0);
@@ -814,7 +838,9 @@ function notify_admin_users_submit($form, &$form_state) {
     }
   }
   elseif (!array_key_exists('users', $form_state['values'])) {
-    drupal_set_message(t('No users have notifications enabled.'), 'warning');
+    if (!$messages) {
+      drupal_set_message(t('No users have notifications enabled.'), 'warning');
+    }
     return;
   }
   if (isset($form_state['values']['users']) && $form_state['values']['users']) {
@@ -915,7 +941,7 @@ function notify_user_settings_form($form, &$form_state, $arg) {
   if ($periodsec) {
     $ss = '<p>' . t('Notifications are sent every !period', array('!period' => $pp));
     if ($periodsec >= 86400) {
-      $ss .= ' ' . t("after !sendhour:00 o' clock", array('!sendhour' => $sendhour));
+      $ss .= ' ' . t("after !sendhour o'clock", array('!sendhour' => $sendhour));
     }
     $ss .= '.</p>';
     $form['notify_page_master']['period'] = array(

@@ -97,9 +97,13 @@ function notify_form_user_register_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Implements hook_user_insert().
+ *
+ * The notify_decision comes from the registration form, unless the
+ * user is imported, when there is no data from the form.
  */
 function notify_user_insert(&$edit, $account, $category) {
-  if (isset($edit['notify_decision']) && $edit['notify_decision'] == 1) {
+  if ((isset($edit['notify_decision']) && $edit['notify_decision'] == 1) ||
+    (!isset($edit['notify_decision']) && variable_get('notify_import', 0))) {
     db_insert('notify')
       ->fields(array(
       'uid' => $account->uid,
