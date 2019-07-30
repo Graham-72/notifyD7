@@ -171,7 +171,7 @@ function notify_node_delete($node) {
  */
 function notify_comment_delete($comment) {
   \Drupal::database()->delete('notify_unpublished_queue')
-    ->condition('cid', $comment->cid)
+    ->condition('cid', $comment->id())
     ->execute();
 }
 
