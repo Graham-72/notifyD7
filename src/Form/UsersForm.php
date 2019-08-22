@@ -2,7 +2,10 @@
 
 namespace Drupal\notify\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Messenger\MessengerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -10,6 +13,36 @@ use Drupal\Core\Form\FormStateInterface;
  * Defines a form that configures forms module settings.
  */
 class UsersForm extends ConfigFormBase {
+
+  /**
+   * Drupal\Core\Messenger\MessengerInterface definition.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * Class constructor.
+   *
+   * @param ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param MessengerInterface $messenger
+   *   The core messenger service.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+    parent::__construct($config_factory);
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('messenger')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -133,7 +166,7 @@ class UsersForm extends ConfigFormBase {
       }
     }
     elseif (!array_key_exists('users', $values)) {
-      drupal_set_message(t('No users have notifications enabled.'), 'warning');
+      $this->messenger->addMessage(t('No users have notifications enabled.'), 'warning');
       return;
     }
     if (isset($values['users']) && $values['users']) {
@@ -149,7 +182,7 @@ class UsersForm extends ConfigFormBase {
           ->execute();
       }
     }
-    drupal_set_message(t('Users notify settings saved.'));
+    $this->messenger->addMessage(t('Users notify settings saved.'));
   }
 
 }
