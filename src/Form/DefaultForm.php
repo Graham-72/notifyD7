@@ -5,6 +5,7 @@ namespace Drupal\notify\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Extension\ModuleHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,16 +23,25 @@ class DefaultForm extends ConfigFormBase {
   protected $messenger;
 
   /**
+   * Drupal\Core\Extension\ModuleHandler definition.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
    * Class constructor.
    *
    * @param ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param MessengerInterface $messenger
    *   The core messenger service.
+   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    */
-  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger, ModuleHandler $module_handler) {
     parent::__construct($config_factory);
     $this->messenger = $messenger;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -40,7 +50,8 @@ class DefaultForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('module_handler')
     );
   }
 
@@ -97,7 +108,7 @@ class DefaultForm extends ConfigFormBase {
     );
     $form['notify_defs']['comment'] = array(
       '#type' => 'radios',
-      '#access' => \Drupal::service('module_handler')->moduleExists('comment'),
+      '#access' => $this->moduleHandler->moduleExists('comment'),
       '#title' => t('Notify new comments'),
       '#default_value' => $config->get('notify_def_comment'),
       '#options' => array(t('Disabled'), t('Enabled')),
