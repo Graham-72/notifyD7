@@ -2,7 +2,10 @@
 
 namespace Drupal\notify\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Messenger\MessengerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -14,6 +17,36 @@ if (!defined('NOTIFY_NODE_TYPE')) {
  * Defines a form that configures forms module settings.
  */
 class UserSettings extends ConfigFormBase {
+
+  /**
+   * Drupal\Core\Messenger\MessengerInterface definition.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * Class constructor.
+   *
+   * @param ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param MessengerInterface $messenger
+   *   The core messenger service.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+    parent::__construct($config_factory);
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('messenger')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -68,7 +101,7 @@ class UserSettings extends ConfigFormBase {
     $form = array();
     if (!$notify->mail) {
       $url = '/user/' . $userprofile . '/edit';
-      drupal_set_message(t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', array('@url' => $url)), 'error');
+      $this->messenger->addMessage(t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', array('@url' => $url)), 'error');
     }
 
     $form['notify_page_master'] = array(
@@ -260,7 +293,7 @@ class UserSettings extends ConfigFormBase {
       }
     }
 
-    drupal_set_message(t('Notify settings saved.'));
+    $this->messenger->addMessage(t('Notify settings saved.'));
   }
 
 }
