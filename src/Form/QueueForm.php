@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Defines a form that configures forms module settings.
  */
 class QueueForm extends ConfigFormBase {
+
   /**
    * Drupal\Core\Messenger\MessengerInterface definition.
    *
