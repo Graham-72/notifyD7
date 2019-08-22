@@ -217,7 +217,7 @@ class SkipForm extends ConfigFormBase {
         ->save();
     }
 
-    drupal_set_message(t('Skip flags saved.'));
+    $this->messenger->addMessage(t('Skip flags saved.'));
   }
 
 }
