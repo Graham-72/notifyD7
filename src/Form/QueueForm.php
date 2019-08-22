@@ -2,7 +2,10 @@
 
 namespace Drupal\notify\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Messenger\MessengerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -10,6 +13,36 @@ use Drupal\Core\Form\FormStateInterface;
  * Defines a form that configures forms module settings.
  */
 class QueueForm extends ConfigFormBase {
+  /**
+   * Drupal\Core\Messenger\MessengerInterface definition.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * Class constructor.
+   *
+   * @param ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param MessengerInterface $messenger
+   *   The core messenger service.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, MessengerInterface $messenger) {
+    parent::__construct($config_factory);
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('messenger')
+    );
+  }
+
 
   /**
    * {@inheritdoc}
@@ -201,20 +234,20 @@ class QueueForm extends ConfigFormBase {
     $frform_send_last = strtotime($values['lastdate']);
     if (FALSE ===  $frform_send_last) {
 //      form_set_error('notify_queue_settings', t('This does not look like a valid date format.'));
-      drupal_set_message(t('This does not look like a valid date format.'), 'error');
+      $this->messenger->addMessage(t('This does not look like a valid date format.'), 'error');
       $form_state->setRebuild();
       return;
     }
     if ($process < 2) {
       if ($notify_send_last != $frform_send_last) {
-        drupal_set_message(t('You must select &#8220;Override timestamp&#8221; to override the timestamp.'), 'error');
+        $this->messenger->addMessage(t('You must select &#8220;Override timestamp&#8221; to override the timestamp.'), 'error');
         $form_state->setRebuild();
         return;
       }
     }
     elseif ($process == 2) {
       if ($notify_send_last == $frform_send_last) {
-        drupal_set_message(t('You selected &#8220;Override timestamp&#8221;, but the timestamp is not altered.'), 'error');
+        $this->messenger->addMessage(t('You selected &#8220;Override timestamp&#8221;, but the timestamp is not altered.'), 'error');
         $form_state->setRebuild();
         return;
       }
@@ -225,7 +258,7 @@ class QueueForm extends ConfigFormBase {
       list($num_sent, $num_fail) = _notify_send();
 
       if ($num_fail > 0) {
-        drupal_set_message(t('@sent notification @emsent sent successfully, @fail @emfail could not be sent.',
+        $this->messenger->addMessage(t('@sent notification @emsent sent successfully, @fail @emfail could not be sent.',
           array(
             '@sent' => $num_sent, '@emsent' =>  \Drupal::translation()->formatPlural($num_sent, 'e-mail', 'e-mails'),
             '@fail' => $num_fail, '@emfail' =>  \Drupal::translation()->formatPlural($num_fail, 'notification', 'notifications'),
@@ -234,11 +267,11 @@ class QueueForm extends ConfigFormBase {
 //        $watchdog_status = WATCHDOG_ERROR;
       }
       elseif ($num_sent > 0) {
-        drupal_set_message(t('@count pending notification @emails have been sent in this pass.', array('@count' => $num_sent, '@emails' =>  \Drupal::translation()->formatPlural($num_sent, 'e-mail', 'e-mails'))));
+        $this->messenger->addMessage(t('@count pending notification @emails have been sent in this pass.', array('@count' => $num_sent, '@emails' =>  \Drupal::translation()->formatPlural($num_sent, 'e-mail', 'e-mails'))));
 //        $watchdog_status = WATCHDOG_INFO;
       }
       if (0 == ($num_sent + $num_fail)) {
-        drupal_set_message(t('No notifications needed to be sent in this pass.'));
+        $this->messenger->addMessage(t('No notifications needed to be sent in this pass.'));
       }
       else {
         if ($watchdog_level <= 1) {
@@ -277,7 +310,7 @@ class QueueForm extends ConfigFormBase {
         ->set('notify_skip_nodes', array())
         ->set('notify_skip_comments', array())
         ->save();
-      drupal_set_message(t('The notification queue has been truncated. No e-mail were sent.'));
+      $this->messenger->addMessage(t('The notification queue has been truncated. No e-mail were sent.'));
       if ($watchdog_level <= 1) {
         \Drupal::logger('notify')->notice('Notification queue truncated.');
       }
@@ -290,7 +323,7 @@ class QueueForm extends ConfigFormBase {
         ->set('notify_skip_nodes', array())
         ->set('notify_skip_comments', array())
         ->save();
-      drupal_set_message(t('Timestamp overridden'));
+      $this->messenger->addMessage(t('Timestamp overridden'));
     }
   }
 
