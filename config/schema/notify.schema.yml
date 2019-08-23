@@ -1,0 +1,29 @@
+notify.settings:
+  type: config_object
+  label: 'E-mail notification settings'
+  mapping:
+    notify_period:
+      type: string
+      label: 'Send notifications every'
+    notify_send_hour:
+      type: integer
+      label: 'Hour to Send Notifications'
+    notify_attempts:
+      type: string
+      label: 'Number of failed sends after which notifications are disabled'
+    notify_batch:
+      type: string
+      label: 'Maximum number of notifications to send out per cron run'
+    notify_include_updates:
+      type: boolean
+      label: 'Include updated posts in notifications'
+    notify_unpublished:
+      type: boolean
+      label: 'Administrators shall be notified about unpublished content of tracked types'
+    notify_watchdog:
+      type: integer
+      label: 'Watchdog log level'
+    notify_weightur:
+      type: string
+      label: 'Weight of notification field in user registration form'
+
