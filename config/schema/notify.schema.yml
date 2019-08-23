@@ -48,4 +48,6 @@ notify.settings:
       type: string
       lable: 'Notify number of sent'
     notify_num_failed:
+      type: string
+      lable: 'Notify number of failed'
 
