@@ -6,7 +6,7 @@ notify.settings:
       type: string
       label: 'Send notifications every'
     notify_send_hour:
-      type: integer
+      type: string
       label: 'Hour to Send Notifications'
     notify_attempts:
       type: string
@@ -15,15 +15,37 @@ notify.settings:
       type: string
       label: 'Maximum number of notifications to send out per cron run'
     notify_include_updates:
-      type: boolean
+      type: string
       label: 'Include updated posts in notifications'
     notify_unpublished:
-      type: boolean
+      type: string
       label: 'Administrators shall be notified about unpublished content of tracked types'
     notify_watchdog:
-      type: integer
+      type: string
       label: 'Watchdog log level'
     notify_weightur:
       type: string
       label: 'Weight of notification field in user registration form'
+    notify_reg_default:
+      type: string
+      lable: 'Receive e-mail notifications'
+    notify_def_node:
+      type: string
+      label: 'Notify new content'
+    notify_def_comment:
+      type: string
+      lable: 'Notify new comments'
+    notify_def_teasers:
+      type: string
+      lable: 'How much to include?'
+    notify_send_start:
+      type: string
+      lable: 'Send start timestamp'
+    notify_send_last:
+      type: string
+      lable: 'Last notification timestamp'
+    notify_num_sent:
+      type: string
+      lable: 'Notify number of sent'
+    notify_num_failed:
 
