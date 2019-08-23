@@ -67,19 +67,19 @@ class QueueForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $config = $this->config('notify.settings');
 
-    $period = $config->get('notify_period', 86400);
-    $since = $config->get('notify_send_last', 0) - $period;
+    $period = $config->get('notify_period');
+    $since = $config->get('notify_send_last') - $period;
     $lastdate = \Drupal::service('date.formatter')->format($since, 'short');
 
     if (NULL !== ($config->get('notify_send_start'))) {
       $start = \Drupal::time()->getRequestTime();
     }
     else {
-      $start = $config->get('notify_send_start', 0);
+      $start = $config->get('notify_send_start');
     }
 
     $startdate = \Drupal::service('date.formatter')->format($start, 'short');
-    $notify_send_last  = $config->get('notify_send_last', 0);
+    $notify_send_last  = $config->get('notify_send_last');
     if (!isset($notify_send_last)) {
       $notify_send_last = \Drupal::time()->getRequestTime();
     }
@@ -132,7 +132,7 @@ class QueueForm extends ConfigFormBase {
     else {
       $queue_msg = t('No notifications queued');
     }
-    $flagcnt = count($config->get('notify_skip_nodes', array())) + count($config->get('notify_skip_comments', array()));
+    $flagcnt = count($config->get('notify_skip_nodes')) + count($config->get('notify_skip_comments'));
     if ($flagcnt) {
       $skip_msg = t('@item flagged for skipping', array(
         '@item' => \Drupal::translation()->formatPlural($flagcnt, '1 item is', '@count items are'),
@@ -158,9 +158,9 @@ class QueueForm extends ConfigFormBase {
       $unpub_msg = t('No unpublished items');
     }
 
-    $sent = $config->get('notify_num_sent', 0);
-    $fail = $config->get('notify_num_failed', 0);
-    $batch_remain = count($config->get('notify_users', array()));
+    $sent = $config->get('notify_num_sent');
+    $fail = $config->get('notify_num_failed');
+    $batch_remain = count($config->get('notify_users'));
 
     $creat_msg = t('There are @nodes and @comms created', array(
       '@nodes' => \Drupal::translation()->formatPlural($np, '1 node', '@count nodes'),
@@ -208,7 +208,7 @@ class QueueForm extends ConfigFormBase {
         $sent_msg .= ', ' . t('no failures');
       }
     }
-    $mailsystem = $config->get('mail_system', NULL);
+    $mailsystem = $config->get('mail_system') ?? NULL;
     $ms = isset($mailsystem['default-system']) ? $mailsystem['default-system'] : t('system default');
     $form['batch']['schedule'] = array(
       '#markup' => $creat_msg . $publ_msg . ' ' . $intrv_msg . '.<br>'
@@ -231,7 +231,7 @@ class QueueForm extends ConfigFormBase {
     $values = $form_state->getValues();
 
     $process= $values['process'];
-    $notify_send_last = $config->get('notify_send_last', 0);
+    $notify_send_last = $config->get('notify_send_last');
     $frform_send_last = strtotime($values['lastdate']);
     if (FALSE ===  $frform_send_last) {
 //      form_set_error('notify_queue_settings', t('This does not look like a valid date format.'));
@@ -254,7 +254,7 @@ class QueueForm extends ConfigFormBase {
       }
     }
 
-    $watchdog_level = $config->get('notify_watchdog', 0);
+    $watchdog_level = $config->get('notify_watchdog') ?? 0;
     if (0 == $values['process']) { // flush
       list($num_sent, $num_fail) = _notify_send();
 
@@ -279,8 +279,8 @@ class QueueForm extends ConfigFormBase {
           \Drupal::logger('notify')->notice('Notifications sent: @sent, failures: @fail.', array('@sent' => $num_sent, '@fail' => $num_fail));
         }
       }
-      $num_sent += $config->get('notify_num_sent', 0);
-      $num_fail += $config->get('notify_num_failed', 0);
+      $num_sent += $config->get('notify_num_sent');
+      $num_fail += $config->get('notify_num_failed');
       \Drupal::configFactory()->getEditable('notify.settings')
         ->set('notify_num_sent', $num_sent)
         ->set('notify_num_failed', $num_fail)
