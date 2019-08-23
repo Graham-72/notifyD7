@@ -26,7 +26,10 @@ function notify_help($path, $arg) {
     case 'admin/help#notify':
       $output = '<p>' . t('The notification module allows users to subscribe to periodic e-mails which include all new or revised content and/or comments much like the daily news letters sent by some websites.  Even if this feature is not configured for normal site users, it can be a useful feature for an administrator of a site to monitor content submissions and comment posts.') . '</p>';
       $output .= '<p>' . t('The administrator sets the frequency of the e-mails in the notify administration interface. They can also set how many e-mail failures should occur before notify stops sending notifications.  Note that cron must be enabled for notifications to be sent out.') . '</p>';
-      $output .= '<p>'  . t('For more information please read the community documentation handbook <a href="@notifyhb">Notify page</a>.', array('@notifyhb' => url('http://www.drupal.org/handbook/modules/notify/'))) . '</p>';
+      $output .= t('<p>For more information please read the community documentation handbook :notifyhb</p>.', [
+        ':notifyhb' => 'http://www.drupal.org/handbook/modules/notify/',
+        '@link_title' => 'Notify page',
+      ]);
       return $output;
   }
 }
@@ -480,7 +483,7 @@ function _notify_content($node, $comment, $view_mode) {
   elseif (3 == $view_mode && !$comment) {
     $content = node_view($node, 'full');
     // Run of all children so that every attached field is also included.
-    $children = element_children($content, TRUE);
+    $children = _notify_element_children($content, TRUE);
 
     foreach ($children as $child) {
       if (isset($content[$child]['#title']) && isset($content[$child][0]['#markup']) && $content[$child]['#access']) {
@@ -793,7 +796,7 @@ function _notify_send() {
 
             $onecomment .= '   ' . ++$comment_count . '. ' . t('@title by @author @status', array(
                 '@title' => $commobj->label(),
-                '@author' => ($commobj->getOwner()->getDisplayName() ? $commobj->getOwner()->getDisplayName() : \Drupal::config('anonymous', 'Anonymous')),
+                '@author' => ($commobj->getOwner()->getDisplayName() ? $commobj->getOwner()->getDisplayName() : \Drupal::config('anonymous')),
                 '@status' => $status,
               ), array('langcode' => $upl))
               . $link . "<br />";
@@ -808,8 +811,8 @@ function _notify_send() {
                 '@count' => \Drupal::translation()->formatPlural($comment_count, '1 new comment', '@count new comments'),
                 '@title' => $node->label(),
                 '@type'  => $node->type->entity->label(),
-                '@author' => $node->getOwner()->getDisplayName() ? $node->getOwner()->getDisplayName() : \Drupal::config('anonymous', 'Anonymous'),
-              ), array('langcode' => $upl)) . ' ' . $shortlink . "<br />";
+                '@author' => $node->getOwner()->getDisplayName() ? $node->getOwner()->getDisplayName() : \Drupal::config('anonymous'),
+              ), array('langcode' => $upl)) . ' ' . $shortlink ?? '' . "<br />";
           }
         }
 
@@ -879,4 +882,49 @@ function _notify_send() {
   }
 
   return array($num_sent, $num_fail);
+}
+
+/**
+ * Identifies the children of an element array, optionally sorted by weight.
+ *
+ * The children of a element array are those key/value pairs whose key does
+ * not start with a '#'. See drupal_render() for details.
+ *
+ * @param $elements
+ *   The element array whose children are to be identified.
+ * @param $sort
+ *   Boolean to indicate whether the children should be sorted by weight.
+ *
+ * @return
+ *   The array keys of the element's children.
+ */
+function _notify_element_children(&$elements, $sort = FALSE) {
+  // Do not attempt to sort elements which have already been sorted.
+  $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
+
+  // Filter out properties from the element, leaving only children.
+  $children = array();
+  $sortable = FALSE;
+  foreach ($elements as $key => $value) {
+    if ($key === '' || $key[0] !== '#') {
+      $children[$key] = $value;
+      if (is_array($value) && isset($value['#weight'])) {
+        $sortable = TRUE;
+      }
+    }
+  }
+  // Sort the children if necessary.
+  if ($sort && $sortable) {
+    uasort($children, 'element_sort');
+    // Put the sorted children back into $elements in the correct order, to
+    // preserve sorting if the same element is passed through
+    // _notify_element_children() twice.
+    foreach ($children as $key => $child) {
+      unset($elements[$key]);
+      $elements[$key] = $child;
+    }
+    $elements['#sorted'] = TRUE;
+  }
+
+  return array_keys($children);
 }
