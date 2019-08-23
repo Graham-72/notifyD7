@@ -12,6 +12,7 @@
  */
 
 use Drupal\Core\Mail\MailFormatHelper;
+use Drupal\Core\Database\Query\Condition;
 
 if (!defined('NOTIFY_NODE_TYPE')) {
   define('NOTIFY_NODE_TYPE', 'notify_node_type_');
@@ -260,13 +261,13 @@ function _notify_select_content() {
     $q->condition('n.type', $ntype, 'IN');
   }
   if ($config->get('notify_include_updates', 1)) {
-    $q->condition(db_or()
-      ->condition(db_and()
+    $q->condition((new Condition('OR'))
+      ->condition((new Condition('AND'))
         ->condition('u.created', $since, '>')
-        ->condition('u.created', $send_start, '<='))
-      ->condition(db_and()
-        ->condition('u.changed', $since, '>')
-        ->condition('u.changed', $send_start, '<=')
+          ->condition('u.created', $send_start, '<='))
+      ->condition((new Condition('AND'))
+          ->condition('u.changed', $since, '>')
+          ->condition('u.changed', $send_start, '<=')
       ));
     $q->orderBy('u.created', 'asc');
     $q->allowRowCount = TRUE;
@@ -312,11 +313,11 @@ function _notify_select_content() {
       $q->condition('n.type', $ntype, 'IN');
     }
     if ($config->get('notify_include_updates', 1)) {
-      $q->condition(db_or()
-        ->condition(db_and()
+      $q->condition((new Condition('OR'))
+        ->condition((new Condition('AND'))
           ->condition('v.created', $since, '>')
           ->condition('v.created', $send_start, '<='))
-        ->condition(db_and()
+        ->condition((new Condition('AND'))
           ->condition('v.changed', $since, '>')
           ->condition('v.changed', $send_start, '<=')));
       $q->orderBy('v.created', 'asc');
