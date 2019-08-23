@@ -504,7 +504,7 @@ function _notify_content($node, $comment, $view_mode) {
     if ('teaser' == $vmode) {
       $comment->comment_body['und'][0]['value'] = text_summary($comment->comment_body['und'][0]['value'], NULL, 200);
     }
-    $content = comment_view($comment, $node, $vmode);
+    $content = \Drupal::entityTypeManager()->getViewBuilder('comment')->view($comment, $node, $vmode);
     if (isset($content['comment_body'][0]['#markup'])) {
       $txt = $content['comment_body'][0]['#markup'];
     }
