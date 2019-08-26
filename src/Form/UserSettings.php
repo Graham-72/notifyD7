@@ -174,11 +174,11 @@ class UserSettings extends ConfigFormBase {
     $enatypes = array();
 
     foreach (\Drupal\node\Entity\NodeType::loadMultiple() as $type => $object) {
-      if ($config->get(NOTIFY_NODE_TYPE . $type, 0)) {
+      if ($config->get(NOTIFY_NODE_TYPE . $type)) {
         $enatypes[] = array($type, $object->label());
       }
     }
-    if (\Drupal::currentUser()->hasPermission('administer notify queue', $account) || empty($enatypes )) {
+    if (\Drupal::currentUser()->hasPermission('administer notify queue') || empty($enatypes )) {
       $enatypes = array();
       foreach ($alltypes as $type => $obj) {
         $enatypes[] = array($type, $obj->label());
