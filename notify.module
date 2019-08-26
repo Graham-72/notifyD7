@@ -50,9 +50,9 @@ function notify_cron() {
     return;
   }
 
-  $send_last = $config->get('notify_send_last', 0);
-  $cron_next = $config->get('notify_cron_next', 0);
-  $doitp = $config->get('notify_users', array());
+  $send_last = $config->get('notify_send_last');
+  $cron_next = $config->get('notify_cron_next');
+  $doitp = $config->get('notify_users');
 
   if ($period >= 86400) {
     if ($doitp || ($cron_next < \Drupal::time()->getRequestTime())) {
@@ -193,7 +193,7 @@ function _notify_get_content_types(&$ntype, $foop) {
   $config = \Drupal::config('notify.settings');
   $ntype = array();
   foreach (\Drupal\node\Entity\NodeType::loadMultiple() as $type => $object) {
-    if ($config->get(NOTIFY_NODE_TYPE . $type, 0)) {
+    if ($config->get(NOTIFY_NODE_TYPE . $type)) {
       $ntype[] = $type;
     }
   }
@@ -235,16 +235,16 @@ function _notify_count($config) {
  */
 function _notify_select_content() {
   $config = \Drupal::config('notify.settings');
-  $batch_remain = count($config->get('notify_users', array()));
-  $since = $config->get('notify_send_last', 0);
+  $batch_remain = count($config->get('notify_users'));
+  $since = $config->get('notify_send_last');
   if ($batch_remain) {
-    $send_start = $config->get('notify_send_start', 0);
+    $send_start = $config->get('notify_send_start');
   }
   else {
     $send_start = \Drupal::time()->getRequestTime();
   }
   if (!$since) {
-    $period = $config->get('notify_period', 86400);
+    $period = $config->get('notify_period');
     if ($period > 0) {
       $since = $send_start - $period;
     }
@@ -263,7 +263,7 @@ function _notify_select_content() {
   if (count($ntype) >= 1) {
     $q->condition('n.type', $ntype, 'IN');
   }
-  if ($config->get('notify_include_updates', 1)) {
+  if ($config->get('notify_include_updates')) {
     $q->condition((new Condition('OR'))
       ->condition((new Condition('AND'))
         ->condition('u.created', $since, '>')
@@ -315,7 +315,7 @@ function _notify_select_content() {
     if (count($ntype) >= 1) {
       $q->condition('n.type', $ntype, 'IN');
     }
-    if ($config->get('notify_include_updates', 1)) {
+    if ($config->get('notify_include_updates')) {
       $q->condition((new Condition('OR'))
         ->condition((new Condition('AND'))
           ->condition('v.created', $since, '>')
@@ -393,7 +393,7 @@ function _notify_next_notificaton($send_last) {
 
   // Interval >= 1 day.
 
-  $cron_next = $config->get('notify_cron_next', 0);
+  $cron_next = $config->get('notify_cron_next');
   if (!$cron_next) {
     $cron_next = _notify_cron_next($next_time_to_send);
 //    $config->set('notify_cron_next', $cron_next);
@@ -407,7 +407,7 @@ function _notify_next_notificaton($send_last) {
 
 function _notify_cron_next($next_time_to_send) {
   $config = \Drupal::config('notify.settings');
-  $send_hour  = $config->get('notify_send_hour',  9);
+  $send_hour  = $config->get('notify_send_hour');
   // Compute the next as the sending hour today.
   $cron_next = strtotime(date('Y-m-d ', $next_time_to_send) . $send_hour . ':00:00');
 
@@ -429,7 +429,7 @@ function _notify_user_reg_fields() {
   // Add a fieldset containing a checkbox for users to accept getting updates on
   // the registration form.
   $fields['notify_agree'] = array(
-    '#weight' => $config->get('notify_weightur', 0),
+    '#weight' => $config->get('notify_weightur'),
     '#type' => 'fieldset',
     '#title' => t('E-mail Notifications'),
   );
@@ -439,7 +439,7 @@ function _notify_user_reg_fields() {
     '#type' => 'checkbox',
     '#title' => t('Receive e-mail notifications of new content posted to this site. Notifications are sent every @interval.', array('@interval' => \Drupal::service('date.formatter')->format($period))),
     '#return_value' => 1,
-    '#default_value' => $config->get('notify_reg_default', 1),
+    '#default_value' => $config->get('notify_reg_default'),
   );
 
   return $fields;
@@ -532,7 +532,7 @@ function _notify_send() {
   $separator = "------------------------------------------------------------------------------<br />";
   $mini_separator = "----<br />";
 
-  $send_start = $config->get('notify_send_start', 0);
+  $send_start = $config->get('notify_send_start');
   $num_sent = 0;
   $num_fail = 0;
   list ($res_nodes, $res_comms, $res_nopub, $res_copub, $res_nounp, $res_counp) = _notify_select_content();
@@ -583,7 +583,7 @@ function _notify_send() {
   }
 
   if ($count) {
-    $uresult = $config->get('notify_users', array());
+    $uresult = $config->get('notify_users');
     if (empty($uresult)) {
       // Set up for sending a new batch. Init all variables.
       $result = \Drupal::database()->select('notify', 'n');
@@ -606,7 +606,7 @@ function _notify_send() {
         ->save();
     }
 
-    $batchlimit = $config->get('notify_batch', 100);
+    $batchlimit = $config->get('notify_batch');
     $batchcount = 0;
 
     // Allow to safely impersonate the recipient so that the node is rendered
@@ -614,7 +614,7 @@ function _notify_send() {
     $original_user = $user;
     //TODO: Fix drupal_save_session() issue
     if (NULL !== ($config->get('notify_skip_nodes'))) {
-      $notify_skip_nodes = $config->get('notify_skip_nodes', array());
+      $notify_skip_nodes = $config->get('notify_skip_nodes');
     }
     else {
       $notify_skip_nodes = array();
@@ -624,7 +624,7 @@ function _notify_send() {
       $notify_skip_comments = array();
     }
     else {
-      $notify_skip_comments = $config->get('notify_skip_comments', array());
+      $notify_skip_comments = $config->get('notify_skip_comments');
     }
 
     foreach ($uresult as $index => $userrow) {
@@ -660,7 +660,7 @@ function _notify_send() {
             continue;
           }
 
-          if (!$config->get('notify_unpublished', 1) && 0 == $node->isPublished()) {
+          if (!$config->get('notify_unpublished') && 0 == $node->isPublished()) {
             continue;
           }
 
@@ -681,7 +681,7 @@ function _notify_send() {
             }
           }
 
-          $ml_level = $config->get('notify_multilingual', 1);
+          $ml_level = $config->get('notify_multilingual');
           if (!$userobj->hasPermission('administer notify')) {
             if ($ml_level && $node->tnid) {
               if ($node->language != $upl) {
@@ -691,7 +691,7 @@ function _notify_send() {
             if ((2 == $ml_level) && (0 == $node->tnid) && ('und' != $node->language)) {
               continue;
             }
-            $ignore_unverified = $config->get('notify_unverified', 0);
+            $ignore_unverified = $config->get('notify_unverified');
             if ($ignore_unverified && !$node->uid) {
               continue;
             }
@@ -707,7 +707,7 @@ function _notify_send() {
           $node_body .= '<strong>' . ++$node_count . '.</strong> ' . $node->label() . '. ';
           if (count($node_revs_list) > 1) {
             $update = '(' . t('last updated by @author', array(
-                '@author' => ($node_revision->getOwner()->getDisplayName() ? $node_revision->getOwner()->getDisplayName() : $config->get('anonymous', 'Anonymous')),
+                '@author' => ($node_revision->getOwner()->getDisplayName() ? $node_revision->getOwner()->getDisplayName() : $config->get('anonymous')),
               ), array('langcode' => $upl)) . ') ';
           }
           else {
@@ -770,7 +770,7 @@ function _notify_send() {
             if (!$userobj->hasPermission('administer comments') && !in_array($node->getType(), $defaultlist)) {
               continue;
             }
-            if (!$config->get('notify_unpublished', 1) && 0 == $commobj->isPublished()) {
+            if (!$config->get('notify_unpublished') && 0 == $commobj->isPublished()) {
               continue;
             }
             // Determine whether to show comment status.
@@ -826,7 +826,7 @@ function _notify_send() {
       $body = $node_body . $comment_body;
       // If there was anything new, send mail.
       if ($body) {
-        $watchdog_level = $config->get('notify_watchdog', 0);
+        $watchdog_level = $config->get('notify_watchdog');
         if (\Drupal::service('plugin.manager.mail')->mail('notify', 'notice', $userrow['mail'], $upl, array('content' => $body, 'user' => $userobj, 'viewmode' => $userrow['teasers']), NULL, true)) {
           if ($watchdog_level == 0) {
             \Drupal::logger('notify')->notice('User %name (%mail) notified successfully.', array('%name' => $userrow['name'], '%mail' => $userrow['mail']));
@@ -855,10 +855,10 @@ function _notify_send() {
     // Restore the original user session.
     $user = $original_user;
   }
-  $rest = count($config->get('notify_users', array()));
+  $rest = count($config->get('notify_users'));
   // If $rest is empty, then set notify_send_last.
   if (!$rest) {
-    $send_start = $config->get('notify_send_start', 0);
+    $send_start = $config->get('notify_send_start');
 
     \Drupal::configFactory()->getEditable('notify.settings')
       ->set('notify_send_last', $send_start)
