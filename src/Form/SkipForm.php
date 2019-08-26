@@ -114,11 +114,11 @@ class SkipForm extends ConfigFormBase {
 
     $form['#tree'] = TRUE;
     $form['info'] = array(
-      '#markup' => '<p>' . t('The following table shows all messages that are candidates for bulk notifications:' . '</p>'),
+      '#markup' => '<p>' . $this->t('The following table shows all messages that are candidates for bulk notifications:' . '</p>'),
     );
 
-    $skpnodes = $config->get('notify_skip_nodes', array());
-    $skpcomts = $config->get('notify_skip_comments', array());
+    $skpnodes = $config->get('notify_skip_nodes');
+    $skpcomts = $config->get('notify_skip_comments');
     $ii = 0;
     $entities = array();
     foreach ($nodes as $node) {
@@ -173,15 +173,15 @@ class SkipForm extends ConfigFormBase {
       }
     }
     $form['entities'] = $entities;
-    $batch_remain = count($config->get('notify_users', array()));
+    $batch_remain = count($config->get('notify_users') ?? 0);
     if ($batch_remain) {
       $form['info2'] = array(
-        '#markup' => '<p>' . t('Please note that the list above may be out of sync.  Saving an altered list of skip flags is disabled as long as notifications are being processed.') . '</p> ',
+        '#markup' => '<p>' . $this->t('Please note that the list above may be out of sync.  Saving an altered list of skip flags is disabled as long as notifications are being processed.') . '</p> ',
       );
     }
     else {
       $form['info2'] = array(
-        '#markup' => '<p>' . t('To flag that <em>no</em> notification about a particular message should be sent, check the checkbox in the &#8220;Skip&#8220; column. Press &#8220;Save settings&#8220; to save the flags.') . '</p> ',
+        '#markup' => '<p>' . $this->t('To flag that <em>no</em> notification about a particular message should be sent, check the checkbox in the &#8220;Skip&#8220; column. Press &#8220;Save settings&#8220; to save the flags.') . '</p> ',
       );
     }
 
@@ -217,7 +217,7 @@ class SkipForm extends ConfigFormBase {
         ->save();
     }
 
-    $this->messenger->addMessage(t('Skip flags saved.'));
+    $this->messenger->addMessage($this->t('Skip flags saved.'));
   }
 
 }
