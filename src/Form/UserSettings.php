@@ -70,13 +70,7 @@ class UserSettings extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $config = $this->config('notify.settings');
 
-    $user = \Drupal::currentUser();
     $userprofile = \Drupal::routeMatch()->getParameter('user');
-
-    if ($user->id() != $userprofile && !\Drupal::currentUser()->hasPermission('administer notify')) {
-      drupal_access_denied();
-      return;
-    }
 
     $account = \Drupal\user\Entity\User::load($userprofile);
     if (!is_object($account)) {

@@ -44,8 +44,8 @@ notify.user_settings:
     _form: '\Drupal\notify\Form\UserSettings'
     _title: 'Notify Settings'
   requirements:
-    _permission: 'access notify'
+    _custom_access: '\Drupal\notify\Access\UserSettingsAccess::access'
   options:
-      parameters:
-        entity:
-          user: 'entity:user'
+    parameters:
+      entity:
+        user: 'entity:user'
