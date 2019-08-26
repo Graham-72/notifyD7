@@ -136,7 +136,7 @@ class SettingsForm extends ConfigFormBase {
     $form['notify_settings']['notify_period'] = array(
       '#type' => 'select',
       '#title' => t('Send notifications every'),
-      '#default_value' => $config->get('notify_period', array(86400)),
+      '#default_value' => $config->get('notify_period'),
       '#options' => $period,
       '#description' => t('How often should new content notifications be sent? Requires cron to be running at least this often.'),
     );
@@ -145,7 +145,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => t('Hour to Send Notifications'),
       '#description' => t('Specify the hour (24-hour clock) in which notifications should be sent, if the frequency is one day or greater.'),
-      '#default_value' => $config->get('notify_send_hour', 9),
+      '#default_value' => $config->get('notify_send_hour'),
       '#options' => array(
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -156,7 +156,7 @@ class SettingsForm extends ConfigFormBase {
     $form['notify_settings']['notify_attempts'] = array(
       '#type' => 'select',
       '#title' => t('Number of failed sends after which notifications are disabled'),
-      '#default_value' => $config->get('notify_attempts', array(5)),
+      '#default_value' => $config->get('notify_attempts'),
       '#options' => $attempts,
     );
 
@@ -164,7 +164,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => t('Maximum number of notifications to send out per cron run'),
       '#description' => t('The maximum number of notification e-mails to send in each pass of  a cron maintenance task. If necessary, reduce the number of items to prevent resource limit conflicts.'),
-      '#default_value' => $config->get('notify_batch', array(100)),
+      '#default_value' => $config->get('notify_batch'),
       '#options' => $batch,
     );
 
@@ -172,20 +172,20 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Include updated posts in notifications'),
       '#return_value' => 1,
-      '#default_value' => $config->get('notify_include_updates', 1),
+      '#default_value' => $config->get('notify_include_updates'),
     );
 
     $form['notify_settings']['notify_unpublished'] = array(
       '#type' => 'checkbox',
       '#title' => t('Administrators shall be notified about unpublished content of tracked types'),
       '#return_value' => 1,
-      '#default_value' => $config->get('notify_unpublished', 1),
+      '#default_value' => $config->get('notify_unpublished'),
     );
 
     $form['notify_settings']['notify_watchdog'] = array(
       '#type' => 'radios',
       '#title' => t('Watchdog log level'),
-      '#default_value' => $config->get('notify_watchdog', array(3)),
+      '#default_value' => $config->get('notify_watchdog'),
       '#options' => array(t('All'), t('Failures+Summary'), t('Failures'), t('Nothing')),
       '#description' => t('This setting lets you specify how much to log.'),
     );
@@ -193,7 +193,7 @@ class SettingsForm extends ConfigFormBase {
     $form['notify_settings']['notify_weightur'] = array(
       '#type' => 'textfield',
       '#title' => t('Weight of notification field in user registration form'),
-      '#default_value' => $config->get('notify_weightur', 0),
+      '#default_value' => $config->get('notify_weightur'),
       '#size' => 3,
       '#maxlength' => 5,
       '#description' => t('The weight you set here will determine the position of the notification field when it appears in the user registration form.'),
