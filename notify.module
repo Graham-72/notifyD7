@@ -114,7 +114,7 @@ function notify_mail($key, &$message, $params) {
   $sitename = $siteconfig->get('name');
   $sitemail = $siteconfig->get('mail');
   $upl = $params['user']->getPreferredLangcode();
-  $messagefrom = '"'. $sitename .'" <'. $sitemail .'>';
+  $messagefrom = $sitename .' <'. $sitemail .'>';
 
   $message['headers']['MIME-Version'] = '1.0';
   $message['headers']['Content-Type'] = 'text/html;charset=utf-8';
