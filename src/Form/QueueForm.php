@@ -86,38 +86,38 @@ class QueueForm extends ConfigFormBase {
     $next_last = _notify_next_notificaton($notify_send_last);
 
     if ($next_last == -1) {
-      $batch_msg = t('No more notifications scheduled');
+      $batch_msg = $this->t('No more notifications scheduled');
     }
     elseif ($next_last == 0) {
-      $batch_msg = t('The next notification is scheduled for the next cron run');
+      $batch_msg = $this->t('The next notification is scheduled for the next cron run');
     }
     else {
       $next = \Drupal::service('date.formatter')->format($next_last, 'short');
-      $batch_msg = t('The next notification is scheduled for the first cron run after ') . $next;
+      $batch_msg = $this->t('The next notification is scheduled for the first cron run after ') . $next;
     }
 
     $form['process'] = array(
       '#type' => 'radios',
-      '#title' => t('Notification queue operations'),
+      '#title' => $this->t('Notification queue operations'),
       '#default_value' => 0,
-      '#options' => array(t('Send batch now'), t('Truncate queue'), t('Override timestamp')),
-      '#description' => t('Select &#8220;Send batch now&#8220; to send next batch of e-mails queued for notifications. Select &#8220;Truncate queue&#8220; to empty queue of pending notification <em>without</em> sending e-mails. Select &#8220;Override timestamp&#8220; to override the last notification timestamp. Press &#8220;Submit&#8220; to execute.'),
+      '#options' => array($this->t('Send batch now'), $this->t('Truncate queue'), $this->t('Override timestamp')),
+      '#description' => $this->t('Select &#8220;Send batch now&#8220; to send next batch of e-mails queued for notifications. Select &#8220;Truncate queue&#8220; to empty queue of pending notification <em>without</em> sending e-mails. Select &#8220;Override timestamp&#8220; to override the last notification timestamp. Press &#8220;Submit&#8220; to execute.'),
     );
 
     $send_last = \Drupal::service('date.formatter')->format($notify_send_last, 'custom', 'Y-m-d H:i:s');
 
     $form['lastdate'] = array(
       '#type' => 'textfield',
-      '#title' => t('Last notification timestamp'),
+      '#title' => $this->t('Last notification timestamp'),
       '#default_value' => $send_last,
       '#size' => 19,
       '#maxlength' => 19,
-      '#description' => t('To explicitly set the last notification timestamp, change the value of this field and select the &#8220;Override timestamp&#8220; option above, then press &#8220;Submit&#8220; to execute.'),
+      '#description' => $this->t('To explicitly set the last notification timestamp, change the value of this field and select the &#8220;Override timestamp&#8220; option above, then press &#8220;Submit&#8220; to execute.'),
     );
 
     $form['batch'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Status'),
+      '#title' => $this->t('Status'),
       '#collapsible' => TRUE,
     );
 
@@ -125,49 +125,49 @@ class QueueForm extends ConfigFormBase {
 
     $npcp = $np + $cp;
     if ($npcp) {
-      $queue_msg = t('Notifications about at least @item queued', array(
+      $queue_msg = $this->t('Notifications about at least @item queued', array(
         '@item' => \Drupal::translation()->formatPlural($npcp, '1 item is', '@count items are'),
       ));
     }
     else {
-      $queue_msg = t('No notifications queued');
+      $queue_msg = $this->t('No notifications queued');
     }
     $flagcnt = count($config->get('notify_skip_nodes')) + count($config->get('notify_skip_comments'));
     if ($flagcnt) {
-      $skip_msg = t('@item flagged for skipping', array(
+      $skip_msg = $this->t('@item flagged for skipping', array(
         '@item' => \Drupal::translation()->formatPlural($flagcnt, '1 item is', '@count items are'),
       ));
     }
     else {
-      $skip_msg = t('No item is flagged for skipping');
+      $skip_msg = $this->t('No item is flagged for skipping');
     }
 
     if (($np && $nu) || ($cp && $cu)) {
       $nonew_msg = '';
     }
     else {
-      $nonew_msg = t(', no notification about unpublished items are queued');
+      $nonew_msg = $this->t(', no notification about unpublished items are queued');
     }
     if ($nu + $cu) {
-      $unpub_msg = t('Unpublished: @nodeup and @commup', array(
+      $unpub_msg = $this->t('Unpublished: @nodeup and @commup', array(
           '@nodeup' => \Drupal::translation()->formatPlural($nu, '1 node', '@count nodes'),
           '@commup' => \Drupal::translation()->formatPlural($cu, '1 comment', '@count comments'),
         )) . $nonew_msg;
     }
     else {
-      $unpub_msg = t('No unpublished items');
+      $unpub_msg = $this->t('No unpublished items');
     }
 
     $sent = $config->get('notify_num_sent');
     $fail = $config->get('notify_num_failed');
     $batch_remain = count($config->get('notify_users') ?? 0);
 
-    $creat_msg = t('There are @nodes and @comms created', array(
+    $creat_msg = $this->t('There are @nodes and @comms created', array(
       '@nodes' => \Drupal::translation()->formatPlural($np, '1 node', '@count nodes'),
       '@comms' => \Drupal::translation()->formatPlural($cp, '1 comment', '@count comments'),
     ));
     if ($nn + $cn) {
-      $publ_msg = t(', and in addition @noderp and @commrp published,', array(
+      $publ_msg = $this->t(', and in addition @noderp and @commrp published,', array(
         '@noderp' => \Drupal::translation()->formatPlural($nn, '1 node', '@count nodes'),
         '@commrp' => \Drupal::translation()->formatPlural($cn, '1 comment', '@count comments'),
       ));
@@ -176,40 +176,40 @@ class QueueForm extends ConfigFormBase {
       $publ_msg = '';
     }
     if ($batch_remain) {
-      $intrv_msg = t('between @last and @start', array(
+      $intrv_msg = $this->t('between @last and @start', array(
         '@last' => $lastdate,
         '@start' => $startdate,
       ));
-      $sent_msg = t('Batch not yet complete.  So far @sent has been sent (@fail, @remain to go)', array(
+      $sent_msg = $this->t('Batch not yet complete.  So far @sent has been sent (@fail, @remain to go)', array(
         '@sent' => \Drupal::translation()->formatPlural($sent, '1 e-mail', '@count e-mails'),
         '@fail' => \Drupal::translation()->formatPlural($fail, '1 failure', '@count failures'),
         '@remain' => \Drupal::translation()->formatPlural($batch_remain, '1 user', '@count users'),
       ));
     }
     else {
-      $intrv_msg = t('since @last', array(
+      $intrv_msg = $this->t('since @last', array(
         '@last' => $lastdate,
       ));
-      $sent_msg = t('Last batch:') . ' ';
+      $sent_msg = $this->t('Last batch:') . ' ';
       if ($sent == 0) {
-        $sent_msg = t('No e-mails were sent');
+        $sent_msg = $this->t('No e-mails were sent');
       }
       else {
-        $sent_msg .= t('sent @sent', array(
+        $sent_msg .= $this->t('sent @sent', array(
           '@sent' => \Drupal::translation()->formatPlural($sent, '1 e-mail', '@count e-mails'),
         ));
       }
       if ($fail > 0) {
-        $sent_msg .= ', ' . t('@fail', array(
+        $sent_msg .= ', ' . $this->t('@fail', array(
             '@fail' => \Drupal::translation()->formatPlural($fail, '1 failure', '@count failures'),
           ));
       }
       elseif ($sent) {
-        $sent_msg .= ', ' . t('no failures');
+        $sent_msg .= ', ' . $this->t('no failures');
       }
     }
     $mailsystem = $config->get('mail_system') ?? NULL;
-    $ms = isset($mailsystem['default-system']) ? $mailsystem['default-system'] : t('system default');
+    $ms = isset($mailsystem['default-system']) ? $mailsystem['default-system'] : $this->t('system default');
     $form['batch']['schedule'] = array(
       '#markup' => $creat_msg . $publ_msg . ' ' . $intrv_msg . '.<br>'
         . $unpub_msg . '.<br>'
@@ -217,7 +217,7 @@ class QueueForm extends ConfigFormBase {
         . $skip_msg . '.<br>'
         . $sent_msg . '.<br>'
         . $batch_msg . '.<br>'
-        . t('Default MailSystem: ') . $ms . '.'
+        . $this->t('Default MailSystem: ') . $ms . '.'
     );
 
     return parent::buildForm($form, $form_state);
@@ -234,7 +234,7 @@ class QueueForm extends ConfigFormBase {
     $notify_send_last = $config->get('notify_send_last');
     $frform_send_last = strtotime($values['lastdate']);
     if (FALSE ===  $frform_send_last) {
-//      form_set_error('notify_queue_settings', t('This does not look like a valid date format.'));
+//      form_set_error('notify_queue_settings', $this->t('This does not look like a valid date format.'));
       $this->messenger->addMessage(t('This does not look like a valid date format.'), 'error');
       $form_state->setRebuild();
       return;
