@@ -100,7 +100,7 @@ class UserSettings extends ConfigFormBase {
 
     $form['notify_page_master'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Master switch'),
+      '#title' => $this->t('Master switch'),
     );
     // If user existed before notify was enabled, these are not set in db.
     if (!isset($notify->status)) {
@@ -121,54 +121,54 @@ class UserSettings extends ConfigFormBase {
 
     $form['notify_page_master']['status'] = array(
       '#type' => 'radios',
-      '#title' => t('Notify status'),
+      '#title' => $this->t('Notify status'),
       '#default_value' => $notify->status,
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => $output . '&nbsp;' . t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under &#8220;Detailed settings&#8221; and &#8220;Subscriptions&#8221;.'),
+      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#description' => $output . '&nbsp;' . $this->t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under &#8220;Detailed settings&#8221; and &#8220;Subscriptions&#8221;.'),
     );
 
     $form['notify_page_detailed'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Detailed settings'),
+      '#title' => $this->t('Detailed settings'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#description' => t('These settings will only be effective if the master switch is set to &#8220;Enabled&#8221;.'),
+      '#description' => $this->t('These settings will only be effective if the master switch is set to &#8220;Enabled&#8221;.'),
     );
     $form['notify_page_detailed']['node'] = array(
       '#type' => 'radios',
-      '#title' => t('Notify new content'),
+      '#title' => $this->t('Notify new content'),
       '#default_value' => $notify->node,
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => t('Include new posts in the notification mail.'),
+      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#description' => $this->t('Include new posts in the notification mail.'),
     );
     $form['notify_page_detailed']['comment'] = array(
       '#type' => 'radios',
       '#access' => \Drupal::service('module_handler')->moduleExists('comment'),
-      '#title' => t('Notify new comments'),
+      '#title' => $this->t('Notify new comments'),
       '#default_value' => $notify->comment,
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => t('Include new comments in the notification mail.'),
+      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#description' => $this->t('Include new comments in the notification mail.'),
     );
     $form['notify_page_detailed']['teasers'] = array(
       '#type' => 'radios',
-      '#title' => t('How much to include?'),
+      '#title' => $this->t('How much to include?'),
       '#default_value' => $notify->teasers,
       '#options' => array(
-        t('Title only'),
-        t('Title + Teaser/Excerpt'),
-        t('Title + Body'),
-        t('Title + Body + Fields'),
+        $this->t('Title only'),
+        $this->t('Title + Teaser/Excerpt'),
+        $this->t('Title + Body'),
+        $this->t('Title + Body + Fields'),
       ),
-      '#description' => t('Select the amount of each item to include in the notification e-mail.'),
+      '#description' => $this->t('Select the amount of each item to include in the notification e-mail.'),
     );
 
     $set = 'notify_page_nodetype';
     $form[$set] = array(
       '#type' => 'fieldset',
-      '#title' => t('Subscriptions'),
+      '#title' => $this->t('Subscriptions'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => t('Tick the content types you want to subscribe to.'),
+      '#description' => $this->t('Tick the content types you want to subscribe to.'),
     );
     $alltypes = \Drupal\node\Entity\NodeType::loadMultiple();
     $enatypes = array();
@@ -287,7 +287,7 @@ class UserSettings extends ConfigFormBase {
       }
     }
 
-    $this->messenger->addMessage(t('Notify settings saved.'));
+    $this->messenger->addMessage($this->t('Notify settings saved.'));
   }
 
 }
