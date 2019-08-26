@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\node\Entity\NodeType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
@@ -79,64 +80,64 @@ class DefaultForm extends ConfigFormBase {
     $set = 'defaults';
     $form['notify_defaults'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Notification default for new users'),
+      '#title' => $this->t('Notification default for new users'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#description' => t('The default master switch for new users (check for enabled, uncheck for disabled).'),
+      '#description' => $this->t('The default master switch for new users (check for enabled, uncheck for disabled).'),
     );
 
     $form['notify_defaults']['notify_reg_default'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Receive e-mail notifications'),
+      '#title' => $this->t('Receive e-mail notifications'),
       '#return_value' => 1,
       '#default_value' => $config->get('notify_reg_default'),
     );
 
     $form['notify_defs'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Initial settings'),
+      '#title' => $this->t('Initial settings'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#description' => t('These are the initial settings that will apply to new users registering, and to users that are enrolled in notifications with batch subscription.'),
+      '#description' => $this->t('These are the initial settings that will apply to new users registering, and to users that are enrolled in notifications with batch subscription.'),
     );
     $form['notify_defs']['node'] = array(
       '#type' => 'radios',
-      '#title' => t('Notify new content'),
+      '#title' => $this->t('Notify new content'),
       '#default_value' => $config->get('notify_def_node'),
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => t('Include new posts in the notification mail.'),
+      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#description' => $this->t('Include new posts in the notification mail.'),
     );
     $form['notify_defs']['comment'] = array(
       '#type' => 'radios',
       '#access' => $this->moduleHandler->moduleExists('comment'),
-      '#title' => t('Notify new comments'),
+      '#title' => $this->t('Notify new comments'),
       '#default_value' => $config->get('notify_def_comment'),
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => t('Include new comments in the notification mail.'),
+      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#description' => $this->t('Include new comments in the notification mail.'),
     );
     $form['notify_defs']['teasers'] = array(
       '#type' => 'radios',
-      '#title' => t('How much to include?'),
+      '#title' => $this->t('How much to include?'),
       '#default_value' => $config->get('notify_def_teasers'),
       '#options' => array(
-        t('Title only'),
-        t('Title + Teaser/Excerpt'),
-        t('Title + Body'),
-        t('Title + Body + Fields'),
+        $this->t('Title only'),
+        $this->t('Title + Teaser/Excerpt'),
+        $this->t('Title + Body'),
+        $this->t('Title + Body + Fields'),
       ),
-      '#description' => t('Select the amount of each item to include in the notification e-mail.'),
+      '#description' => $this->t('Select the amount of each item to include in the notification e-mail.'),
     );
 
     $set = 'ntype';
     $form[$set] = array(
       '#type' => 'fieldset',
-      '#title' => t('Notification by node type'),
+      '#title' => $this->t('Notification by node type'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#description' => t('Having nothing checked defaults to sending notifications about all node types.'),
+      '#description' => $this->t('Having nothing checked defaults to sending notifications about all node types.'),
     );
     $nodetypes = array();
-    foreach (\Drupal\node\Entity\NodeType::loadMultiple() as $type => $object) {
+    foreach (NodeType::loadMultiple() as $type => $object) {
       $nodetypes[$type] = $object->label();
     }
 
@@ -167,7 +168,7 @@ class DefaultForm extends ConfigFormBase {
       ->set('notify_def_teasers', $values['teasers'])
       ->set('notify_nodetypes', $values['notify_nodetypes'])
       ->save();
-    $this->messenger->addMessage(t('Notify default settings saved.'));
+    $this->messenger->addMessage($this->t('Notify default settings saved.'));
   }
 
 }
