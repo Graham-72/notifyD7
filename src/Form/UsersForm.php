@@ -68,7 +68,7 @@ class UsersForm extends ConfigFormBase {
 
     $form['#tree'] = TRUE;
     $form['info'] = array(
-      '#markup' => '<p>' . t('The following table shows all users that have notifications enabled:') . '</p>',
+      '#markup' => '<p>' . $this->t('The following table shows all users that have notifications enabled:') . '</p>',
     );
 
     $form['users'] = array();
@@ -104,10 +104,10 @@ class UsersForm extends ConfigFormBase {
         '#type' => 'select',
         '#default_value' => $user->teasers,
         '#options' => array(
-          t('Title only'),
-          t('Title + Teaser'),
-          t('Title + Body'),
-          t('Title + Body + Fields'),
+          $this->t('Title only'),
+          $this->t('Title + Teaser'),
+          $this->t('Title + Body'),
+          $this->t('Title + Body + Fields'),
         ),
       );
       $form['users'][$user->uid]['attempts'] = array(
@@ -116,14 +116,14 @@ class UsersForm extends ConfigFormBase {
     }
 
     $form['info2'] = array(
-      '#markup' => '<p>' . t('You may check/uncheck the checkboxes and the &#8220;How much&#8220;-selection to change the users\' subscription. Press &#8220;Save settings&#8220; to save the settings.' . '</p>'),
+      '#markup' => '<p>' . $this->t('You may check/uncheck the checkboxes and the &#8220;How much&#8220;-selection to change the users\' subscription. Press &#8220;Save settings&#8220; to save the settings.' . '</p>'),
     );
 
     $form['bulk'] = array(
-      '#title' => t('Bulk subscribe all users'),
+      '#title' => $this->t('Bulk subscribe all users'),
       '#type' => 'checkbox',
       '#default_value' => FALSE,
-      '#description' => t('Subscribe all non-blocked users that do not already subscribe to notifications.'),
+      '#description' => $this->t('Subscribe all non-blocked users that do not already subscribe to notifications.'),
     );
     return parent::buildForm($form, $form_state);
   }
@@ -136,9 +136,9 @@ class UsersForm extends ConfigFormBase {
     $values = $form_state->getValues();
 
     if (isset($values['bulk']) && 1 == $values['bulk']) {
-      $node = $config->get('notify_def_node', 1);
-      $comment = $config->get('notify_def_comment', 0);
-      $teasers = $config->get('notify_def_teasers', 0);
+      $node = $config->get('notify_def_node');
+      $comment = $config->get('notify_def_comment');
+      $teasers = $config->get('notify_def_teasers');
 
       $r = \Drupal::database()->select('notify', 'n');
       $r->fields('n', array('uid'));
@@ -166,7 +166,7 @@ class UsersForm extends ConfigFormBase {
       }
     }
     elseif (!array_key_exists('users', $values)) {
-      $this->messenger->addMessage(t('No users have notifications enabled.'), 'warning');
+      $this->messenger->addMessage($this->t('No users have notifications enabled.'), 'warning');
       return;
     }
     if (isset($values['users']) && $values['users']) {
@@ -182,7 +182,7 @@ class UsersForm extends ConfigFormBase {
           ->execute();
       }
     }
-    $this->messenger->addMessage(t('Users notify settings saved.'));
+    $this->messenger->addMessage($this->t('Users notify settings saved.'));
   }
 
 }
