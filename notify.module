@@ -13,6 +13,7 @@
 
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Render\Element;
 
 if (!defined('NOTIFY_NODE_TYPE')) {
   define('NOTIFY_NODE_TYPE', 'notify_node_type_');
@@ -483,7 +484,7 @@ function _notify_content($node, $comment, $view_mode) {
   elseif (3 == $view_mode && !$comment) {
     $content = node_view($node, 'full');
     // Run of all children so that every attached field is also included.
-    $children = _notify_element_children($content, TRUE);
+    $children = Element::children($content, TRUE);
 
     foreach ($children as $child) {
       if (isset($content[$child]['#title']) && isset($content[$child][0]['#markup']) && $content[$child]['#access']) {
@@ -882,49 +883,4 @@ function _notify_send() {
   }
 
   return array($num_sent, $num_fail);
-}
-
-/**
- * Identifies the children of an element array, optionally sorted by weight.
- *
- * The children of a element array are those key/value pairs whose key does
- * not start with a '#'. See drupal_render() for details.
- *
- * @param $elements
- *   The element array whose children are to be identified.
- * @param $sort
- *   Boolean to indicate whether the children should be sorted by weight.
- *
- * @return
- *   The array keys of the element's children.
- */
-function _notify_element_children(&$elements, $sort = FALSE) {
-  // Do not attempt to sort elements which have already been sorted.
-  $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
-
-  // Filter out properties from the element, leaving only children.
-  $children = array();
-  $sortable = FALSE;
-  foreach ($elements as $key => $value) {
-    if ($key === '' || $key[0] !== '#') {
-      $children[$key] = $value;
-      if (is_array($value) && isset($value['#weight'])) {
-        $sortable = TRUE;
-      }
-    }
-  }
-  // Sort the children if necessary.
-  if ($sort && $sortable) {
-    uasort($children, 'element_sort');
-    // Put the sorted children back into $elements in the correct order, to
-    // preserve sorting if the same element is passed through
-    // _notify_element_children() twice.
-    foreach ($children as $key => $child) {
-      unset($elements[$key]);
-      $elements[$key] = $child;
-    }
-    $elements['#sorted'] = TRUE;
-  }
-
-  return array_keys($children);
 }
