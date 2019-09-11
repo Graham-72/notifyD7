@@ -27,13 +27,13 @@ notifications about new content and comments posted on a Drupal web
 site.
 
 * For a full description of the module, visit the project page:
-  https://drupal.org/project/notify
+  https://www.drupal.org/project/notify
 
 * For more documentation about its use, visit the documentation page:
   https://www.drupal.org/documentation/modules/notify
 
 * To submit bug reports and feature suggestions, or to track changes:
-  https://drupal.org/project/issues/notify
+  https://www.drupal.org/project/issues/notify
 
 If you enable node revisions (https://www.drupal.org/node/320614), the
 notification e-mail will also mention the name of the last person to
@@ -343,25 +343,21 @@ RELATED PROJECTS & ALTERNATIVES
 -------------------------------
 
 See the pages:
-- https://drupal.org/node/645108
-- http://groups.drupal.org/node/15928
+- https://www.drupal.org/node/645108
+- https://groups.drupal.org/node/15928
 for overviews of modules providing similar functionality.
 
 
-MAINTAINERS
------------
+MAINTAINERS AND CONTRIBUTERS
+----------------------------
 
-Kjartan Mannes <kjartan@drop.org> is the original author.
-Rob Barreca <rob@electronicinsight.com> was a previous maintainer.
-Matt Chapman <matt@ninjitsuweb.com> is the project owner.
-Gisle Hannemyr <gisle@hannemyr.no> maintains the Drupal 7 branch.
+Kjartan Mannes is the original author.
+Rob Barreca was a previous maintainer.
+Matt Chapman is the current project owner.
+Gisle Hannemyr maintains the Drupal 7 branch.
+Ilcho Vuchkov  maintains the Drupal 8/9 branch.
 
-Marton Bodonyi (http://www.interactivejunky.com/),
-Mark Lindsey,
-John Oltman <john.oltman@sitebasin.com>,
-Ward Poelmans <wpoely86@gmail.com>,
-Ishmael Sanchez (http://ishmaelsanchez.com), and
-Ajit Shinde (https://www.facebook.com/shinde.ajit)
-contributed to the Drupal 7 port.
+Marton Bodonyi, Mark Lindsey, John Oltman, Ward Poelmans, Ishmael
+Sanchez, and Ajit Shinde contributed to the Drupal 7 port.
 Vincent Rommelaars <vincent@hostplek.nl> contributed to the Drupal 8
 port.
