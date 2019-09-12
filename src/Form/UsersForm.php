@@ -116,7 +116,7 @@ class UsersForm extends ConfigFormBase {
     }
 
     $form['info2'] = array(
-      '#markup' => '<p>' . $this->t('You may check/uncheck the checkboxes and the &#8220;How much&#8220;-selection to change the users\' subscription. Press &#8220;Save settings&#8220; to save the settings.' . '</p>'),
+      '#markup' => '<p>' . $this->t('You may check/uncheck the checkboxes and the &#8220;How much&#8220;-selection to change the users\' subscription. Press &#8220;Save settings&#8220; to save the settings.') . '</p>',
     );
 
     $form['bulk'] = array(

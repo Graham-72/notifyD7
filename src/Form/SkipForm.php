@@ -173,7 +173,8 @@ class SkipForm extends ConfigFormBase {
       }
     }
     $form['entities'] = $entities;
-    $batch_remain = count($config->get('notify_users') ?? 0);
+    $users = $config->get('notify_users');
+    $batch_remain = $users ? count($users) : 0;
     if ($batch_remain) {
       $form['info2'] = array(
         '#markup' => '<p>' . $this->t('Please note that the list above may be out of sync.  Saving an altered list of skip flags is disabled as long as notifications are being processed.') . '</p> ',

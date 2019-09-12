@@ -236,7 +236,8 @@ function _notify_count($config) {
  */
 function _notify_select_content() {
   $config = \Drupal::config('notify.settings');
-  $batch_remain = count($config->get('notify_users'));
+  $users = $config->get('notify_users');
+  $batch_remain = $users ? count($users) : 0;
   $since = $config->get('notify_send_last');
   if ($batch_remain) {
     $send_start = $config->get('notify_send_start');
@@ -859,7 +860,8 @@ function _notify_send() {
     // Restore the original user session.
     $user = $original_user;
   }
-  $rest = count($config->get('notify_users'));
+  $users = $config->get('notify_users');
+  $rest = $users ? count($users) : 0;
   // If $rest is empty, then set notify_send_last.
   if (!$rest) {
     $send_start = $config->get('notify_send_start');

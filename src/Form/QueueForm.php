@@ -160,7 +160,8 @@ class QueueForm extends ConfigFormBase {
 
     $sent = $config->get('notify_num_sent');
     $fail = $config->get('notify_num_failed');
-    $batch_remain = count($config->get('notify_users') ?? 0);
+    $users = $config->get('notify_users');
+    $batch_remain = $users ? count($users) : 0;
 
     $creat_msg = $this->t('There are @nodes and @comms created', array(
       '@nodes' => \Drupal::translation()->formatPlural($np, '1 node', '@count nodes'),
