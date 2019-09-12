@@ -475,6 +475,9 @@ function _notify_user_has_subscriptions($userprofile) {
  *   1: Title + Teaser/Excerpt
  *   2: Title + Body
  *   3: Title + Body + Fields
+ *
+ * @return string
+ *   The transformed string.
  */
 function _notify_content($node, $comment, $view_mode) {
   $txt = '';
