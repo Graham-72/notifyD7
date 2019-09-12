@@ -78,65 +78,65 @@ class DefaultForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $config = $this->config('notify.settings');
     $set = 'defaults';
-    $form['notify_defaults'] = array(
+    $form['notify_defaults'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Notification default for new users'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#description' => $this->t('The default master switch for new users (check for enabled, uncheck for disabled).'),
-    );
+    ];
 
-    $form['notify_defaults']['notify_reg_default'] = array(
+    $form['notify_defaults']['notify_reg_default'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Receive e-mail notifications'),
       '#return_value' => 1,
       '#default_value' => $config->get('notify_reg_default'),
-    );
+    ];
 
-    $form['notify_defs'] = array(
+    $form['notify_defs'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Initial settings'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#description' => $this->t('These are the initial settings that will apply to new users registering, and to users that are enrolled in notifications with batch subscription.'),
-    );
-    $form['notify_defs']['node'] = array(
+    ];
+    $form['notify_defs']['node'] = [
       '#type' => 'radios',
       '#title' => $this->t('Notify new content'),
       '#default_value' => $config->get('notify_def_node'),
-      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#options' => [$this->t('Disabled'), $this->t('Enabled')],
       '#description' => $this->t('Include new posts in the notification mail.'),
-    );
-    $form['notify_defs']['comment'] = array(
+    ];
+    $form['notify_defs']['comment'] = [
       '#type' => 'radios',
       '#access' => $this->moduleHandler->moduleExists('comment'),
       '#title' => $this->t('Notify new comments'),
       '#default_value' => $config->get('notify_def_comment'),
-      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#options' => [$this->t('Disabled'), $this->t('Enabled')],
       '#description' => $this->t('Include new comments in the notification mail.'),
-    );
-    $form['notify_defs']['teasers'] = array(
+    ];
+    $form['notify_defs']['teasers'] = [
       '#type' => 'radios',
       '#title' => $this->t('How much to include?'),
       '#default_value' => $config->get('notify_def_teasers'),
-      '#options' => array(
+      '#options' => [
         $this->t('Title only'),
         $this->t('Title + Teaser/Excerpt'),
         $this->t('Title + Body'),
         $this->t('Title + Body + Fields'),
-      ),
+      ],
       '#description' => $this->t('Select the amount of each item to include in the notification e-mail.'),
-    );
+    ];
 
     $set = 'ntype';
-    $form[$set] = array(
+    $form[$set] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Notification by node type'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#description' => $this->t('Having nothing checked defaults to sending notifications about all node types.'),
-    );
-    $nodetypes = array();
+    ];
+    $nodetypes = [];
     foreach (NodeType::loadMultiple() as $type => $object) {
       $nodetypes[$type] = $object->label();
     }
@@ -144,15 +144,15 @@ class DefaultForm extends ConfigFormBase {
     if (NULL !== ($config->get('notify_nodetypes'))) {
       $def_nodetypes = $config->get('notify_nodetypes');
     } else {
-      $def_nodetypes = array();
+      $def_nodetypes = [];
     }
 
-    $form[$set]['notify_nodetypes'] = array(
+    $form[$set]['notify_nodetypes'] = [
       '#type' => 'checkboxes',
       '#title' => 'Node types',
       '#options' => $nodetypes,
       '#default_value' => $def_nodetypes,
-    );
+    ];
     return parent::buildForm($form, $form_state);
   }
 
