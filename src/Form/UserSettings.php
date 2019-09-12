@@ -95,7 +95,7 @@ class UserSettings extends ConfigFormBase {
     $form = array();
     if (!$notify->mail) {
       $url = '/user/' . $userprofile . '/edit';
-      $this->messenger->addMessage(t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', array('@url' => $url)), 'error');
+      $this->messenger->addMessage($this->t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', array('@url' => $url)), 'error');
     }
 
     $form['notify_page_master'] = array(
@@ -123,7 +123,7 @@ class UserSettings extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('Notify status'),
       '#default_value' => $notify->status,
-      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
       '#description' => $output . '&nbsp;' . $this->t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under &#8220;Detailed settings&#8221; and &#8220;Subscriptions&#8221;.'),
     );
 
@@ -138,7 +138,7 @@ class UserSettings extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('Notify new content'),
       '#default_value' => $notify->node,
-      '#options' => array(t('Disabled'), $this->t('Enabled')),
+      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
       '#description' => $this->t('Include new posts in the notification mail.'),
     );
     $form['notify_page_detailed']['comment'] = array(
