@@ -80,9 +80,9 @@ class UserSettings extends ConfigFormBase {
     $result = \Drupal::database()->select('users', 'u');
     $result->leftjoin('users_field_data', 'v', 'u.uid = v.uid');
     $result->leftjoin('notify', 'n', 'u.uid = n.uid');
-    $result->fields('u', array('uid'));
-    $result->fields('v', array('name','mail'));
-    $result->fields('n', array('node','teasers', 'comment', 'status'));
+    $result->fields('u', ['uid']);
+    $result->fields('v', ['name','mail']);
+    $result->fields('n', ['node','teasers', 'comment', 'status']);
     $result->condition('u.uid', $userprofile);
     $result->allowRowCount = TRUE;
     $notify = $result->execute()->fetchObject();
@@ -92,16 +92,16 @@ class UserSettings extends ConfigFormBase {
       $notify = NULL;
     }
 
-    $form = array();
+    $form = [];
     if (!$notify->mail) {
       $url = '/user/' . $userprofile . '/edit';
-      $this->messenger->addMessage($this->t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', array('@url' => $url)), 'error');
+      $this->messenger->addMessage($this->t('Your e-mail address must be specified on your <a href="@url">my account</a> page.', ['@url' => $url]), 'error');
     }
 
-    $form['notify_page_master'] = array(
+    $form['notify_page_master'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Master switch'),
-    );
+    ];
     // If user existed before notify was enabled, these are not set in db.
     if (!isset($notify->status)) {
       $notify->status = 0;
@@ -110,78 +110,78 @@ class UserSettings extends ConfigFormBase {
       $notify->comment = 0;
     }
     if (\Drupal::service('module_handler')->moduleExists('advanced_help')) {
-      $output = theme('advanced_help_topic', array(
+      $output = theme('advanced_help_topic', [
         'module' => 'notify',
         'topic' => 'users',
-      ));
+      ]);
     }
     else {
       $output = '';
     }
 
-    $form['notify_page_master']['status'] = array(
+    $form['notify_page_master']['status'] = [
       '#type' => 'radios',
       '#title' => $this->t('Notify status'),
       '#default_value' => $notify->status,
-      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#options' => [$this->t('Disabled'), $this->t('Enabled')],
       '#description' => $output . '&nbsp;' . $this->t('The master switch overrides all other settings for Notify.  You can use it to suspend notifications without having to disturb any of your settings under &#8220;Detailed settings&#8221; and &#8220;Subscriptions&#8221;.'),
-    );
+    ];
 
-    $form['notify_page_detailed'] = array(
+    $form['notify_page_detailed'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Detailed settings'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#description' => $this->t('These settings will only be effective if the master switch is set to &#8220;Enabled&#8221;.'),
-    );
-    $form['notify_page_detailed']['node'] = array(
+    ];
+    $form['notify_page_detailed']['node'] = [
       '#type' => 'radios',
       '#title' => $this->t('Notify new content'),
       '#default_value' => $notify->node,
-      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#options' => [$this->t('Disabled'), $this->t('Enabled')],
       '#description' => $this->t('Include new posts in the notification mail.'),
-    );
-    $form['notify_page_detailed']['comment'] = array(
+    ];
+    $form['notify_page_detailed']['comment'] = [
       '#type' => 'radios',
       '#access' => \Drupal::service('module_handler')->moduleExists('comment'),
       '#title' => $this->t('Notify new comments'),
       '#default_value' => $notify->comment,
-      '#options' => array($this->t('Disabled'), $this->t('Enabled')),
+      '#options' => [$this->t('Disabled'), $this->t('Enabled')],
       '#description' => $this->t('Include new comments in the notification mail.'),
-    );
-    $form['notify_page_detailed']['teasers'] = array(
+    ];
+    $form['notify_page_detailed']['teasers'] = [
       '#type' => 'radios',
       '#title' => $this->t('How much to include?'),
       '#default_value' => $notify->teasers,
-      '#options' => array(
+      '#options' => [
         $this->t('Title only'),
         $this->t('Title + Teaser/Excerpt'),
         $this->t('Title + Body'),
         $this->t('Title + Body + Fields'),
-      ),
+      ],
       '#description' => $this->t('Select the amount of each item to include in the notification e-mail.'),
-    );
+    ];
 
     $set = 'notify_page_nodetype';
-    $form[$set] = array(
+    $form[$set] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Subscriptions'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#description' => $this->t('Tick the content types you want to subscribe to.'),
-    );
+    ];
     $alltypes = \Drupal\node\Entity\NodeType::loadMultiple();
-    $enatypes = array();
+    $enatypes = [];
 
     foreach (\Drupal\node\Entity\NodeType::loadMultiple() as $type => $object) {
       if ($config->get(NOTIFY_NODE_TYPE . $type)) {
-        $enatypes[] = array($type, $object->label());
+        $enatypes[] = [$type, $object->label()];
       }
     }
     if (\Drupal::currentUser()->hasPermission('administer notify queue') || empty($enatypes )) {
-      $enatypes = array();
+      $enatypes = [];
       foreach ($alltypes as $type => $obj) {
-        $enatypes[] = array($type, $obj->label());
+        $enatypes[] = [$type, $obj->label()];
       }
     }
 
@@ -191,36 +191,36 @@ class UserSettings extends ConfigFormBase {
       // Custom subscriptions exists, use those.
       foreach ($enatypes as $type) {
         $field = \Drupal::database()->select('notify_subscriptions', 'n')
-          ->fields('n', array('uid','type'))
+          ->fields('n', ['uid','type'])
           ->condition('uid', $userprofile)
           ->condition('type', $type[0])
           ->execute()->fetchObject();
         $default = $field ? TRUE : FALSE;
-        $form[$set][NOTIFY_NODE_TYPE . $type[0]] = array(
+        $form[$set][NOTIFY_NODE_TYPE . $type[0]] = [
           '#type' => 'checkbox',
           '#title' => $type[1],
           '#return_value' => 1,
           '#default_value' => $default,
-        );
+        ];
       }
     }
     else {
       // No custom subscriptions, so inherit default.
       foreach ($enatypes as $type) {
-        $form[$set][NOTIFY_NODE_TYPE . $type[0]] = array(
+        $form[$set][NOTIFY_NODE_TYPE . $type[0]] = [
           '#type' => 'checkbox',
           '#title' => $type[1],
           '#return_value' => 1,
           '#default_value' => TRUE,
-        );
+        ];
       }
     }
 
 
-    $form['uid'] = array(
+    $form['uid'] = [
       '#type' => 'value',
       '#value' => $userprofile,
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -237,23 +237,23 @@ class UserSettings extends ConfigFormBase {
       ->execute();
 
     $id = \Drupal::database()->insert('notify')
-      ->fields(array(
+      ->fields([
         'uid' => $uid,
         'status' => $values['status'],
         'node' => $values['node'],
         'teasers' => $values['teasers'],
         'comment' => $values['comment'],
-      ))
+      ])
       ->execute();
-    $subscriptions = array();
+    $subscriptions = [];
     // Remember that this is a custom subscriber.
     $subscriber = _notify_user_has_subscriptions($uid);
     if (!$subscriber) {
       \Drupal::database()->insert('notify_subscriptions')
-        ->fields(array(
+        ->fields([
           'uid' => $uid,
           'type' => 'magic custom subscription',
-        ))
+        ])
         ->execute();
     }
 
@@ -262,7 +262,7 @@ class UserSettings extends ConfigFormBase {
         $key = substr($key, 17);
 
         $id = \Drupal::database()->select('notify_subscriptions', 'n')
-          ->fields('n', array('id','uid','type'))
+          ->fields('n', ['id','uid','type'])
           ->condition('uid', $uid)
           ->condition('type', $key)
           ->execute()->fetchObject();
@@ -277,10 +277,10 @@ class UserSettings extends ConfigFormBase {
         else {
           if ($value) {
             \Drupal::database()->insert('notify_subscriptions')
-              ->fields(array(
+              ->fields([
                 'uid' => $uid,
                 'type' => $key,
-              ))
+              ])
               ->execute();
           }
         }
