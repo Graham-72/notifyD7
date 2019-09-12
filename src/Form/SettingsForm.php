@@ -82,7 +82,7 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $config = $this->config('notify.settings');
 
-    $period = array(
+    $period = [
       300 => \Drupal::service('date.formatter')->formatInterval(300),
       600 => \Drupal::service('date.formatter')->formatInterval(600),
       900 => \Drupal::service('date.formatter')->formatInterval(900),
@@ -98,9 +98,9 @@ class SettingsForm extends ConfigFormBase {
       1209600 => \Drupal::service('date.formatter')->formatInterval(1209600),
       2419200 => \Drupal::service('date.formatter')->formatInterval(2419200),
       -1 => $this->t('Never'),
-    );
+    ];
 
-    $attempts = array(
+    $attempts = [
       0 => $this->t('Disabled'),
       1 => 1,
       2 => 2,
@@ -114,9 +114,9 @@ class SettingsForm extends ConfigFormBase {
       10 => 10,
       15 => 15,
       20 => 20,
-    );
+    ];
 
-    $batch = array(
+    $batch = [
       2 => 2,
       3 => 3,
       10 => 10,
@@ -125,79 +125,79 @@ class SettingsForm extends ConfigFormBase {
       100 => 100,
       200 => 200,
       400 => 400,
-    );
+    ];
 
-    $form['notify_settings'] = array(
+    $form['notify_settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('E-mail notification settings'),
       '#collapsible' => TRUE,
-    );
+    ];
 
-    $form['notify_settings']['notify_period'] = array(
+    $form['notify_settings']['notify_period'] = [
       '#type' => 'select',
       '#title' => $this->t('Send notifications every'),
       '#default_value' => $config->get('notify_period'),
       '#options' => $period,
       '#description' => $this->t('How often should new content notifications be sent? Requires cron to be running at least this often.'),
-    );
+    ];
 
-    $form['notify_settings']['notify_send_hour'] = array(
+    $form['notify_settings']['notify_send_hour'] = [
       '#type' => 'select',
       '#title' => $this->t('Hour to Send Notifications'),
       '#description' => $this->t('Specify the hour (24-hour clock) in which notifications should be sent, if the frequency is one day or greater.'),
       '#default_value' => $config->get('notify_send_hour'),
-      '#options' => array(
+      '#options' => [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
         20, 21, 22, 23,
-      ),
-    );
+      ],
+    ];
 
-    $form['notify_settings']['notify_attempts'] = array(
+    $form['notify_settings']['notify_attempts'] = [
       '#type' => 'select',
       '#title' => $this->t('Number of failed sends after which notifications are disabled'),
       '#default_value' => $config->get('notify_attempts'),
       '#options' => $attempts,
-    );
+    ];
 
-    $form['notify_settings']['notify_batch'] = array(
+    $form['notify_settings']['notify_batch'] = [
       '#type' => 'select',
       '#title' => $this->t('Maximum number of notifications to send out per cron run'),
       '#description' => $this->t('The maximum number of notification e-mails to send in each pass of  a cron maintenance task. If necessary, reduce the number of items to prevent resource limit conflicts.'),
       '#default_value' => $config->get('notify_batch'),
       '#options' => $batch,
-    );
+    ];
 
-    $form['notify_settings']['notify_include_updates'] = array(
+    $form['notify_settings']['notify_include_updates'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Include updated posts in notifications'),
       '#return_value' => 1,
       '#default_value' => $config->get('notify_include_updates'),
-    );
+    ];
 
-    $form['notify_settings']['notify_unpublished'] = array(
+    $form['notify_settings']['notify_unpublished'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Administrators shall be notified about unpublished content of tracked types'),
       '#return_value' => 1,
       '#default_value' => $config->get('notify_unpublished'),
-    );
+    ];
 
-    $form['notify_settings']['notify_watchdog'] = array(
+    $form['notify_settings']['notify_watchdog'] = [
       '#type' => 'radios',
       '#title' => $this->t('Watchdog log level'),
       '#default_value' => $config->get('notify_watchdog'),
-      '#options' => array($this->t('All'), $this->t('Failures+Summary'), $this->t('Failures'), $this->t('Nothing')),
+      '#options' => [$this->t('All'), $this->t('Failures+Summary'), $this->t('Failures'), $this->t('Nothing')],
       '#description' => $this->t('This setting lets you specify how much to log.'),
-    );
+    ];
 
-    $form['notify_settings']['notify_weightur'] = array(
+    $form['notify_settings']['notify_weightur'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Weight of notification field in user registration form'),
       '#default_value' => $config->get('notify_weightur'),
       '#size' => 3,
       '#maxlength' => 5,
       '#description' => $this->t('The weight you set here will determine the position of the notification field when it appears in the user registration form.'),
-    );
+    ];
 
     return parent::buildForm($form, $form_state);
   }
