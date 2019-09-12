@@ -70,7 +70,7 @@ class SkipForm extends ConfigFormBase {
 
     // Get the nodes and comments queued.
     $count = 0;
-    $nodes = $comments = array();
+    $nodes = $comments = [];
     // Ordinary nodes
     foreach ($res_nodes as $row) {
       $nodes[$row->nid] = \Drupal::entityTypeManager()->getStorage('node')->load($row->nid);
@@ -110,80 +110,80 @@ class SkipForm extends ConfigFormBase {
         $count++;
       }
     }
-    $form = array();
+    $form = [];
 
     $form['#tree'] = TRUE;
-    $form['info'] = array(
+    $form['info'] = [
       '#markup' => '<p>' . $this->t('The following table shows all messages that are candidates for bulk notifications:' . '</p>'),
-    );
+    ];
 
     $skpnodes = $config->get('notify_skip_nodes');
     $skpcomts = $config->get('notify_skip_comments');
     $ii = 0;
-    $entities = array();
+    $entities = [];
     foreach ($nodes as $node) {
       $ii++;
-      $entities[$ii] = array();
-      $entities[$ii]['nid'] = array(
+      $entities[$ii] = [];
+      $entities[$ii]['nid'] = [
         '#markup' => $node->id(),
-      );
-      $entities[$ii]['cid'] = array(
+      ];
+      $entities[$ii]['cid'] = [
         '#markup' => '-',
-      );
+      ];
 
-      $entities[$ii]['created'] = array(
+      $entities[$ii]['created'] = [
         '#markup' => \Drupal::service('date.formatter')->format($node->getCreatedTime(), 'short'),
-      );
-      $entities[$ii]['updated'] = array(
+      ];
+      $entities[$ii]['updated'] = [
         '#markup' => ($node->getChangedTime() != $node->getCreatedTime()) ? \Drupal::service('date.formatter')->format($node->getChangedTime(), 'short') : '-',
-      );
-      $entities[$ii]['title'] = array(
+      ];
+      $entities[$ii]['title'] = [
         '#markup' => $node->label(),
-      );
+      ];
       $flag = in_array($node->id(), $skpnodes) ? 1 : 0;
-      $entities[$ii]['dist'] = array(
+      $entities[$ii]['dist'] = [
         '#type' => 'checkbox',
         '#default_value' => $flag,
-      );
+      ];
     }
     foreach ($comments as $thread) {
       foreach ($thread as $comment) {
         $ii++;
-        $entities[$ii] = array();
-        $entities[$ii]['nid'] = array(
+        $entities[$ii] = [];
+        $entities[$ii]['nid'] = [
           '#markup' => $comment->get('entity_id')->target_id,
-        );
-        $entities[$ii]['cid'] = array(
+        ];
+        $entities[$ii]['cid'] = [
           '#markup' => $comment->id(),
-        );
-        $entities[$ii]['created'] = array(
+        ];
+        $entities[$ii]['created'] = [
           '#markup' => \Drupal::service('date.formatter')->format($comment->getCreatedTime(), 'short'),
-        );
-        $entities[$ii]['updated'] = array(
+        ];
+        $entities[$ii]['updated'] = [
           '#markup' => ($comment->getChangedTime() != $comment->getCreatedTime()) ? \Drupal::service('date.formatter')->format($comment->getChangedTime(), 'short') : '-',
-        );
-        $entities[$ii]['title'] = array(
+        ];
+        $entities[$ii]['title'] = [
           '#markup' => $comment->label(),
-        );
+        ];
         $flag = in_array($comment->id(), $skpcomts) ? 1 : 0;
-        $entities[$ii]['dist'] = array(
+        $entities[$ii]['dist'] = [
           '#type' => 'checkbox',
           '#default_value' => $flag,
-        );
+        ];
       }
     }
     $form['entities'] = $entities;
     $users = $config->get('notify_users');
     $batch_remain = $users ? count($users) : 0;
     if ($batch_remain) {
-      $form['info2'] = array(
+      $form['info2'] = [
         '#markup' => '<p>' . $this->t('Please note that the list above may be out of sync.  Saving an altered list of skip flags is disabled as long as notifications are being processed.') . '</p> ',
-      );
+      ];
     }
     else {
-      $form['info2'] = array(
+      $form['info2'] = [
         '#markup' => '<p>' . $this->t('To flag that <em>no</em> notification about a particular message should be sent, check the checkbox in the &#8220;Skip&#8220; column. Press &#8220;Save settings&#8220; to save the flags.') . '</p> ',
-      );
+      ];
     }
 
     return parent::buildForm($form, $form_state);
@@ -196,8 +196,8 @@ class SkipForm extends ConfigFormBase {
     $values = $form_state->getValues();
     $form_values = $form_state->getCompleteForm();
 
-    $nodes = array();
-    $comts = array();
+    $nodes = [];
+    $comts = [];
     if (isset($values['entities']) && $values['entities']) {
       foreach ($values['entities'] as $dist => $ii) {
         if ($ii['dist']) {
